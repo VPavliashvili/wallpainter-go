@@ -1,0 +1,29 @@
+
+unda gavaketo ori faili
+    slideshow.go --> romelic saxelic ambobs rasac izasm da amavdroulad iqneba listener named pipe-istvis
+    messenger.go --> es gamoiyenebs named pipes rom slideshow.go-s gaugzavnos mesijebi
+aseve fifo named pipe
+    saxelad --> slideshowpipe
+
+roca messenger.go gagzavnis mesijs am mesijs miigebs 
+named pipe(anu zemotxsenebuli slideshowpipe) romelic sheqmnili iqneba
+slideshow.go-shi(programis gashvebis dasawyisshi moxdeba am named pipe-is sheqmna)
+xoda slideshow.go programa romelic loopshi iqneba gashvebuli tito iteraciaze yoveltvis
+mousmens slideshowpipes da am slideshowpipedan rame mesiji tu daxvda waikitxavs gaparsavs da 
+tu winaswar gansazgvruli romelime brdzaneba iqneba shesabamisadac moiqceva
+
+slideshowpipeis gavlit slideshow.go-m rom miigos mesijebi amistvis i3wm-ma unda moaxdinos
+exec messenger.go xolo tavad mesiji command line argumentis saxit unda gadaeces messenger.go-s
+amis shemdeg messenger.go adgeba da slideshowpipe-ze chawers am gadmocemul mesijs
+
+sabolood ki rogorc ukve vtqvit slideshow.go yovel loopis iteraciaze amowmebs mesiji mouvida tu ara
+roca ki rame mesiji daxvdeba saqmesac gaaketebs, da ase gagrdzeldeba sanam es sami
+(slideshow.go, messenger.go, slideshowpipe) faili iqneba gashvebuli ramshi, anu sul sanam komps ar gamovrtav
+
+saintereso resursebi
+https://gist.github.com/matishsiao/fc1601a3a3f37c70d91ab3b1ed8485c4 <- named pipe gaketeba golangshi
+https://www.geeksforgeeks.org/named-pipe-fifo-example-c-program/ <- named pipeis gamoyenebit choraoba or programas shoris c-ze
+https://www.geeksforgeeks.org/command-line-arguments-in-golang/ <- commang line-dan argumentebis ageba golangshi
+
+SHENISHVNA
+    jer unda davwero /bin/slideshow.py-is chamnacvlebeli golangit da eg avamushavo, zemotxsenebuli gegmebi amis shemdegi nabijia
