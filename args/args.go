@@ -1,42 +1,32 @@
 package args
 
-import (
-	"flag"
-	"fmt"
-	"os"
-)
-
 type Argument[T int | string | bool] struct {
-	Name        string
-	Description string
-	Value       T
+	Name []string
+    Value T
 }
 
-var Time Argument[int]
-var Path Argument[string]
-var Recursive Argument[bool]
+var help = Argument[bool] {
+    Name: []string{"-h", "--help"},
+    Value: false,
+}
 
-func init() {
-	home, _ := os.UserHomeDir()
+func GetArguments[T int | string | bool]() []Argument[T] {
+	args := getArgsFromConsole()
+    var result []Argument[T]
 
-	Time = Argument[int]{
-		Name:        "t",
-		Description: "wallpaper update rate in minutes",
-		Value:       10,
+	for k, v := range args {
+        result = append(result, createArgument[T](k, v))
 	}
-	Path = Argument[string]{
-		Name:        "p",
-		Description: "wallpapers folder destination",
-		Value:       fmt.Sprintf("%v/Pictures/wallpapers", home),
-	}
-    Recursive = Argument[bool]{
-        Name: "r",
-        Description: "include pictures from subdirectories",
-        Value: false,
-    }
+    return result
+}
 
-	flag.IntVar(&Time.Value, Time.Name, Time.Value, Time.Description)
-	flag.StringVar(&Path.Value, Path.Name, Path.Value, Path.Description)
-    flag.BoolVar(&Recursive.Value, Recursive.Name, Recursive.Value, Recursive.Description)
-	flag.Parse()
+func createArgument[T int | string | bool](key string, value string) Argument[T] {
+	var result Argument[T]
+
+	switch key {
+	case "-h", "--help":
+        result = help
+	}
+
+	return result
 }

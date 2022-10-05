@@ -1,9 +1,19 @@
 package commands
 
-import(
-    "github.com/vpavliashvili/slideshow-go/args"
-)
+import "github.com/vpavliashvili/slideshow-go/args"
 
-type Command[T int | string | bool] struct {
-	Arg args.Argument[T]
+var availableCommands []command
+
+type command interface {
+	getName() string
+	Execute() error
+}
+
+func setup() {
+	helpcmd := help{
+		Arg:  args.Help,
+		text: "help text placeholder",
+	}
+
+	availableCommands = append(availableCommands, helpcmd)
 }
