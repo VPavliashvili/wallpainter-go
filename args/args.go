@@ -1,32 +1,45 @@
 package args
 
-type Argument[T int | string | bool] struct {
-	Name []string
-    Value T
+import (
+	"flag"
+	"fmt"
+
+	"golang.org/x/exp/slices"
+)
+
+type Argument interface {
+    GetNames() []string
+    GetValue() flag.Value
+    GetDescription() string
 }
 
-var help = Argument[bool] {
-    Name: []string{"-h", "--help"},
-    Value: false,
+var help boolarg = boolarg{
+    value: &boolval{value: setValue(false)},
+    names: &[]string{"-h", "--help"},
 }
 
-func GetArguments[T int | string | bool]() []Argument[T] {
-	args := getArgsFromConsole()
-    var result []Argument[T]
+func GetArguments() ([]Argument, error) {
+    args := getArgsFromConsole()
+    var result []Argument
 
-	for k, v := range args {
-        result = append(result, createArgument[T](k, v))
-	}
-    return result
+    for k, v := range args {
+        arg, err := createArgument(k, v)
+        if err != nil {
+            return nil, err
+        }
+        result = append(result, arg)
+    }
+    return result, nil
 }
 
-func createArgument[T int | string | bool](key string, value string) Argument[T] {
-	var result Argument[T]
+func createArgument(key string, value string) (Argument, error) {
+    var result Argument
 
-	switch key {
-	case "-h", "--help":
+    if(slices.Contains(*help.names, key)){
         result = help
-	}
+    } else {
+        return nil, fmt.Errorf("argument %v does not exist", key)
+    }
 
-	return result
+    return result, nil
 }

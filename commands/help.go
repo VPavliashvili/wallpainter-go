@@ -12,7 +12,7 @@ type help struct {
 }
 
 func (cmd help) getName() string {
-	return cmd.Arg.Name
+	return cmd.Arg.Names
 }
 
 func (cmd help) Execute() error {
