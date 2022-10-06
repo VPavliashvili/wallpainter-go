@@ -3,6 +3,7 @@ package args
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"golang.org/x/exp/slices"
 )
@@ -17,8 +18,12 @@ type Argument interface {
     getValue() flag.Value
 }
 
+type argsProvider interface {
+    getArgs() []string
+}
+
 func GetArguments() ([]Argument, error) {
-	args := getArgsFromConsole()
+	args := getArgsFromConsole(os.Args)
 	var result []Argument
 
 	for k, v := range args {

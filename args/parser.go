@@ -1,13 +1,12 @@
 package args
 
 import (
-	"os"
 	"strings"
 )
 
-func getArgsFromConsole() map[string]string {
+func getArgsFromConsole(osArgs []string) map[string]string {
 	result := make(map[string]string)
-    raw := os.Args
+    raw := osArgs
     raw = raw[1:]
 
     if len(raw) == 1 {
