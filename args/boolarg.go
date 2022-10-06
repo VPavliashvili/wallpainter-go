@@ -46,13 +46,13 @@ func (b boolarg) GetDescription() string {
 
     for i, v := range *b.names {
         if i % 2 == 1 {
-            builder.WriteByte('/')
+            builder.WriteString(", ")
         }
         builder.WriteString(v)
     }
     formatted := builder.String()
 
-    return fmt.Sprintf("{%v}\n      print this help message", formatted)
+    return fmt.Sprintf("%v\n      print this help message", formatted)
 }
 
 func setValue(b bool) *bool {
