@@ -21,24 +21,27 @@ func main() {
 
 	//fmt.Println(getPassedArgsFromConsole())
 
-    //args := os.Args
-    //args = args[1:]
-    //fmt.Println(args)
+	//args := os.Args
+	//args = args[1:]
+	//fmt.Println(args)
 
     args, err := args.GetArguments()
     if err != nil {
         fmt.Println(err)
         os.Exit(2)
     }
-    arg := args[0]
+    //arg := args[0]
 
-    fmt.Println("arg name:", arg.GetNames())
-    fmt.Println(arg.GetDescription())
+    for _, arg := range args {
 
-    fmt.Println("default value:", arg.GetValue())
-    fmt.Println("changing value")
-    arg.GetValue().Set("true")
-    fmt.Println("value after change:", arg.GetValue())
+        fmt.Println("arg name:", arg.GetNames())
+        fmt.Println(arg.GetDescription())
+
+        fmt.Println("default value:", arg.Value())
+        fmt.Println("changing value")
+        arg.Set("true")
+        fmt.Println("value after change:", arg.Value())
+    }
 }
 
 func getPassedArgsFromConsole() []string {

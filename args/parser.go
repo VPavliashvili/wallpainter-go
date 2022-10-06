@@ -36,7 +36,7 @@ func getArgsFromConsole() map[string]string {
 
 }
 
-
+//command-line argument is either commandArg or optionArg
 func isCommandArg(arg string) bool {
 	return strings.HasPrefix(arg, "--") || strings.HasPrefix(arg, "-")
 }

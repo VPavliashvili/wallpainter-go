@@ -8,38 +8,52 @@ import (
 )
 
 type Argument interface {
-    GetNames() []string
-    GetValue() flag.Value
-    GetDescription() string
-}
+	GetNames() []string
+	GetDescription() string
+	String() string
+    Value() string
+    Set(string) error
 
-var help boolarg = boolarg{
-    value: &boolval{value: setValue(false)},
-    names: &[]string{"-h", "--help"},
+    getValue() flag.Value
 }
 
 func GetArguments() ([]Argument, error) {
-    args := getArgsFromConsole()
-    var result []Argument
+	args := getArgsFromConsole()
+	var result []Argument
 
-    for k, v := range args {
-        arg, err := createArgument(k, v)
-        if err != nil {
-            return nil, err
-        }
-        result = append(result, arg)
-    }
-    return result, nil
+	for k, v := range args {
+		arg, err := createArgument(k, v)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, arg)
+	}
+
+	return result, nil
 }
 
 func createArgument(key string, value string) (Argument, error) {
-    var result Argument
+	var result Argument
 
-    if(slices.Contains(*help.names, key)){
-        result = help
-    } else {
-        return nil, fmt.Errorf("argument %v does not exist", key)
-    }
+    help := getHelp()
+    path := getPath()
 
-    return result, nil
+	if slices.Contains(*help.names, key) {
+		result = help
+	} else if slices.Contains(*path.names, key) {
+		result = path
+		result.getValue().Set(value)
+	} else {
+		return nil, fmt.Errorf("argument %v does not exist", key)
+	}
+
+	return result, nil
+}
+
+func setValue[T int | string | bool](t T) *T {
+	return &t
+}
+
+func setNames(names []string) *[]string {
+	return &names
 }
