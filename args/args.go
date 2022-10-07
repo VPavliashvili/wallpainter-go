@@ -4,22 +4,40 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
 	"golang.org/x/exp/slices"
 )
 
 type Argument interface {
-	GetNames() []string
-	GetDescription() string
+	GetName() string
 	String() string
-    Value() string
-    Set(string) error
+	Value() string
+	Set(string) error
 
-    getValue() flag.Value
+	getValue() flag.Value
 }
 
-type argsProvider interface {
-    getArgs() []string
+type argument struct {
+	name  *string
+	value *string
+}
+
+func (arg argument) GetName() string { return *arg.name }
+func (arg argument) String() string {
+	return fmt.Sprintf("name '%v', value '%v'", *arg.name, *arg.value)
+}
+func (arg argument) Value() string        { return *arg.value }
+func (arg argument) Set(s string) error   { *arg.value = s; return nil }
+func (arg argument) getValue() flag.Value { panic("nobody cares anymore") }
+
+type argError struct {
+	name  string
+	value string
+}
+
+func (err argError) Error() string {
+	return fmt.Sprintf("argError {invalid name: {%v} or value: {%v}}", err.name, err.value)
 }
 
 func GetArguments() ([]Argument, error) {
@@ -37,19 +55,67 @@ func GetArguments() ([]Argument, error) {
 	return result, nil
 }
 
+type pair struct {
+	names    []string
+	validate func(string) bool
+}
+
+var arguments = []pair{
+	{
+		names: []string{"-h", "--help"},
+		validate: func(s string) bool {
+			_, err := strconv.ParseBool(s)
+            return err == nil
+		},
+	},
+	{
+		names: []string{"-p", "--path"},
+		validate: func(s string) bool {
+			if _, err := os.Stat(s); !os.IsNotExist(err) {
+				return true
+			}
+			return false
+		},
+	},
+	{
+		names: []string{"-r"},
+		validate: func(s string) bool {
+			_, err := strconv.ParseBool(s)
+            return err == nil
+		},
+	},
+	{
+		names: []string{"-t"},
+		validate: func(s string) bool {
+			if _, err := strconv.Atoi(s); err == nil {
+				return true
+			}
+			return false
+		},
+	},
+}
+
 func createArgument(key string, value string) (Argument, error) {
-	var result Argument
+	isValid := false
+	for _, arg := range arguments {
+		if slices.Contains(arg.names, key) {
+			if arg.validate(value) {
+				isValid = true
+			}
+			break
+		}
+	}
 
-    help := getHelp()
-    path := getPath()
+	if !isValid {
+		return nil, argError{
+			name:  key,
+			value: value,
+		}
+	}
 
-	if slices.Contains(*help.names, key) {
-		result = help
-	} else if slices.Contains(*path.names, key) {
-		result = path
-		result.getValue().Set(value)
-	} else {
-		return nil, fmt.Errorf("argument %v does not exist", key)
+	var result Argument = argument{
+		name:  &key,
+		value: &value,
 	}
 
 	return result, nil
@@ -57,8 +123,4 @@ func createArgument(key string, value string) (Argument, error) {
 
 func setValue[T int | string | bool](t T) *T {
 	return &t
-}
-
-func setNames(names []string) *[]string {
-	return &names
 }

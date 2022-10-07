@@ -34,8 +34,7 @@ func main() {
 
     for _, arg := range args {
 
-        fmt.Println("arg name:", arg.GetNames())
-        fmt.Println(arg.GetDescription())
+        fmt.Println("arg name:", arg.GetName())
 
         fmt.Println("default value:", arg.Value())
         fmt.Println("changing value")
