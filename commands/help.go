@@ -2,8 +2,6 @@ package commands
 
 import (
 	"fmt"
-
-	"github.com/vpavliashvili/slideshow-go/args"
 )
 
 type help struct {

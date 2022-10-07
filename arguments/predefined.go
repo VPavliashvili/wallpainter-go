@@ -1,9 +1,13 @@
-package args
+package arguments
 
 import (
 	"os"
 	"strconv"
 )
+
+func validateBoolArg(s string) bool {
+    return s == ""
+}
 
 var arguments = []struct {
 	names    []string
@@ -14,8 +18,7 @@ var arguments = []struct {
 		names: []string{"-h", "--help"},
 		desc:  "prints this menu",
 		validate: func(s string) bool {
-			_, err := strconv.ParseBool(s)
-			return err == nil
+            return validateBoolArg(s)
 		},
 	},
 	{
@@ -32,8 +35,7 @@ var arguments = []struct {
 		names: []string{"-r"},
         desc: "search images recursively in passed folder (by default its disabled)",
 		validate: func(s string) bool {
-			_, err := strconv.ParseBool(s)
-			return err == nil
+            return validateBoolArg(s)
 		},
 	},
 	{

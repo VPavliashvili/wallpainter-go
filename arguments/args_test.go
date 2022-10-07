@@ -1,4 +1,4 @@
-package args
+package arguments
 
 import (
 	"errors"
@@ -29,7 +29,7 @@ func TestGetArguments(t *testing.T) {
 	want := []Argument{
 		argument{
 			name:  setValue("-h"),
-			value: setValue("true"),
+			value: setValue(""),
 		},
 		argument{
 			name:  setValue("-p"),
@@ -79,10 +79,10 @@ func TestCreateValidArgument(t *testing.T) {
 	}{
 		{
 			key:   "-h",
-			value: "true",
+			value: "",
 			want: argument{
 				name:  setValue("-h"),
-				value: setValue("true"),
+				value: setValue(""),
 			},
 		},
 		{

@@ -1,7 +1,5 @@
 package commands
 
-import "github.com/vpavliashvili/slideshow-go/args"
-
 var availableCommands []command
 
 type command interface {

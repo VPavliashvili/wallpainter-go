@@ -1,4 +1,4 @@
-module github.com/vpavliashvili/slideshow-go
+module github.com/VPavliashvili/slideshow-go
 
 go 1.19
 

@@ -1,4 +1,4 @@
-package args
+package arguments
 
 import (
 	"strings"
@@ -7,15 +7,6 @@ import (
 type OsArgsTrimmer interface {
 	Trim([]string) ([]string, error)
 }
-
-//type defaultTrimmer struct{}
-
-//func (defaultTrimmer) Trim(args []string) ([]string, error) {
-	//if len(args) < 1 {
-		//return nil, fmt.Errorf("args parameter is problematic. args: %v", args)
-	//}
-	//return args[1:], nil
-//}
 
 func getArgsFromConsole(osArgs []string, trimmer OsArgsTrimmer) map[string]string {
 	result := make(map[string]string)
@@ -38,7 +29,7 @@ func getArgsFromConsole(osArgs []string, trimmer OsArgsTrimmer) map[string]strin
 				i++
 				result[cur] = next
 			} else {
-				result[cur] = "true"
+				result[cur] = ""
 			}
 		} else {
 			s := "current should always be commandArg, looks like iteration bug in foor loop"

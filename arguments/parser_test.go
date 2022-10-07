@@ -1,4 +1,4 @@
-package args
+package arguments
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ func TestGetArgsFromConsole(t *testing.T) {
 		switch i {
 		case 0:
             assertEqual(t, "-h", key)
-            assertEqual(t, "true", value)
+            assertEqual(t, "", value)
 		case 1:
             assertEqual(t, "--path", key)
             assertEqual(t, "~/Pictures", value)

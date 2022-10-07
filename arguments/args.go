@@ -1,4 +1,4 @@
-package args
+package arguments
 
 import (
 	"golang.org/x/exp/slices"
