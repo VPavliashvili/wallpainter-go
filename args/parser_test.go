@@ -18,18 +18,18 @@ func TestGetArgsFromConsole(t *testing.T) {
 	args := []string{
 		"-h", "--path", "~/Pictures",
 	}
-	parsed := getArgsFromConsole(args)
+	parsed := getArgsFromConsole(args, fakeTrimmer{})
 
 	var i int
 	for key, value := range parsed {
 
 		switch i {
 		case 0:
-			assertEqual(t, "--path", key)
-			assertEqual(t, "~/Pictures", value)
+            assertEqual(t, "-h", key)
+            assertEqual(t, "true", value)
 		case 1:
-			assertEqual(t, "-h", key)
-			assertEqual(t, "", value)
+            assertEqual(t, "--path", key)
+            assertEqual(t, "~/Pictures", value)
 		default:
 			panic("there should only be 2 keyvalue pairs")
 		}
