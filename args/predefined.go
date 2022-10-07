@@ -1,18 +1,44 @@
 package args
 
-func getHelp() boolarg {
-	return boolarg{
-		value:       &boolval{value: setValue(true)},
-		names:       &[]string{"-h", "--help"},
-		description: "print this help message",
-	}
-}
+import (
+	"os"
+	"strconv"
+)
 
-func getPath() stringarg {
-	return stringarg{
-		value:       &stringval{value: setValue("")},
-		names:       &[]string{"-p", "--path"},
-		description: "path of the directory where wallpapers are located in",
-	}
+var arguments = []struct{
+    names []string
+    validate func(string) bool
+}{
+	{
+		names: []string{"-h", "--help"},
+		validate: func(s string) bool {
+			_, err := strconv.ParseBool(s)
+			return err == nil
+		},
+	},
+	{
+		names: []string{"-p", "--path"},
+		validate: func(s string) bool {
+			if _, err := os.Stat(s); !os.IsNotExist(err) {
+				return true
+			}
+			return false
+		},
+	},
+	{
+		names: []string{"-r"},
+		validate: func(s string) bool {
+			_, err := strconv.ParseBool(s)
+			return err == nil
+		},
+	},
+	{
+		names: []string{"-t"},
+		validate: func(s string) bool {
+			if _, err := strconv.Atoi(s); err == nil {
+				return true
+			}
+			return false
+		},
+	},
 }
-
