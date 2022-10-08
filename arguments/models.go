@@ -48,3 +48,11 @@ type argError struct {
 func (err argError) Error() string {
 	return fmt.Sprintf("argError {invalid name: {%v} or value: {%v}}", err.name, err.value)
 }
+
+type parseError struct {
+    passedArgs []string
+}
+
+func (err parseError) Error() string {
+    return fmt.Sprintf("parseError {invalid arguments: {%v}}", err.passedArgs)
+}

@@ -8,43 +8,48 @@ type OsArgsTrimmer interface {
 	Trim([]string) ([]string, error)
 }
 
-func getArgsFromConsole(osArgs []string, trimmer OsArgsTrimmer) map[string]string {
+func getArgsFromConsole(osArgs []string, trimmer OsArgsTrimmer) (map[string]string, error) {
 	result := make(map[string]string)
 	raw, err := trimmer.Trim(osArgs)
 
 	if err != nil {
 		panic(err)
 	}
-
 	if len(raw) == 1 {
 		result[raw[0]] = ""
-		return result
+		return result, nil
+	}
+	if isOptArg(raw[0]) {
+        return nil, parseError{passedArgs: raw}
 	}
 
-	for i := 0; i < len(raw)-1; i++ {
-		cur := raw[i]
-		next := raw[i+1]
-		if isCommandArg(cur) {
-			if !isCommandArg(next) {
-				i++
-				result[cur] = next
-			} else {
-				result[cur] = ""
+	for i, arg := range raw {
+		if isOptArg(arg) {
+			opt := arg
+			cmd := raw[i-1]
+			if !isCmdArg(cmd) {
+				return nil, parseError{passedArgs: raw}
 			}
+			result[cmd] = opt
 		} else {
-			s := "current should always be commandArg, looks like iteration bug in foor loop"
-			panic(s)
+			cmd := arg
+			if i < len(raw)-1 {
+				if isCmdArg(raw[i+1]) {
+					result[cmd] = ""
+				}
+			} else {
+				result[cmd] = ""
+			}
 		}
-	}
 
-	return result
+	}
+	return result, nil
 }
 
-// command-line argument is either commandArg or optionArg
-func isCommandArg(arg string) bool {
+func isCmdArg(arg string) bool {
 	return strings.HasPrefix(arg, "--") || strings.HasPrefix(arg, "-")
 }
 
-// -r -p ~/Pictures -t 10
-// -p ~/Pictures t -10
-// -t 10 -r -p ~/Pictures
+func isOptArg(arg string) bool {
+	return !isCmdArg(arg)
+}

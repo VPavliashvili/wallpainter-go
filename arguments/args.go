@@ -5,7 +5,7 @@ import (
 )
 
 func GetArguments(osArgs []string, trimmer OsArgsTrimmer) ([]Argument, error) {
-	args := getArgsFromConsole(osArgs, trimmer)
+	args, _ := getArgsFromConsole(osArgs, trimmer)
 	var result []Argument
 
 	for k, v := range args {
