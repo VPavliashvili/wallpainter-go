@@ -7,12 +7,6 @@ import (
 	"testing"
 )
 
-type fakeTrimmer struct{
-}
-func (fakeTrimmer) Trim(s []string) ([]string, error){
-    return s, nil
-}
-
 func TestGetArguments(t *testing.T) {
 
 	var equal = func(got Argument, want Argument) {
@@ -36,7 +30,7 @@ func TestGetArguments(t *testing.T) {
 		},
 	}
 
-	got, err := GetArguments(args, fakeTrimmer{})
+	got, err := GetArguments(args)
 	if err != nil {
 		t.Errorf("error is not expected here. got %v, want %v", got, want)
 	}

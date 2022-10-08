@@ -4,8 +4,8 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func GetArguments(osArgs []string, trimmer OsArgsTrimmer) ([]Argument, error) {
-	args, _ := getArgsFromConsole(osArgs, trimmer)
+func GetArguments(osArgs []string) ([]Argument, error) {
+	args, _ := getArgsFromConsole(osArgs)
 	var result []Argument
 
 	for k, v := range args {

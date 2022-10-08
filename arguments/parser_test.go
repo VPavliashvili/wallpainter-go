@@ -45,7 +45,7 @@ func TestGetArgsFromConsole(t *testing.T) {
 
 	for _, item := range allArgs {
 
-		parsed, _ := getArgsFromConsole(item.args, fakeTrimmer{})
+		parsed, _ := getArgsFromConsole(item.args)
 		if !reflect.DeepEqual(parsed, item.want) {
             t.Errorf("parse failed. got: %v, want: %v, input: %v", parsed, item.want, item.args)
 		}
@@ -68,7 +68,7 @@ func TestGetArgsFromConsoleWhenInvalid(t *testing.T) {
 	}
 
 	for _, item := range data {
-		resp, err := getArgsFromConsole(item.args, fakeTrimmer{})
+		resp, err := getArgsFromConsole(item.args)
 		if errors.Is(err, item.want) {
             t.Errorf("argError should have been retuned. want: %v, got: %v, input: %v", item.want, err, item.args)
 		}

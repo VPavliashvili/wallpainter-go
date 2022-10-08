@@ -8,13 +8,10 @@ type OsArgsTrimmer interface {
 	Trim([]string) ([]string, error)
 }
 
-func getArgsFromConsole(osArgs []string, trimmer OsArgsTrimmer) (map[string]string, error) {
+func getArgsFromConsole(osArgs []string) (map[string]string, error) {
 	result := make(map[string]string)
-	raw, err := trimmer.Trim(osArgs)
+    raw :=osArgs
 
-	if err != nil {
-		panic(err)
-	}
 	if len(raw) == 1 {
 		result[raw[0]] = ""
 		return result, nil
