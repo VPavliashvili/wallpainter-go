@@ -21,12 +21,12 @@ func GetArguments(osArgs []string, trimmer OsArgsTrimmer) ([]Argument, error) {
 
 func createArgument(key string, value string) (Argument, error) {
 	isValid := false
-    var desc string
+	var desc string
 	for _, arg := range arguments {
 		if slices.Contains(arg.names, key) {
 			if arg.validate(value) {
 				isValid = true
-                desc = arg.desc
+				desc = arg.desc
 			}
 			break
 		}
@@ -39,10 +39,18 @@ func createArgument(key string, value string) (Argument, error) {
 		}
 	}
 
-	var result Argument = argument{
-		name:  &key,
-		value: &value,
-        desc: &desc,
+	var result Argument
+	if value == "" {
+		result = unaryArgument{
+			name: &key,
+			desc: &desc,
+		}
+	} else {
+		result = binaryArgument{
+			name:  &key,
+			value: &value,
+			desc:  &desc,
+		}
 	}
 
 	return result, nil

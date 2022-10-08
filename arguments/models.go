@@ -2,6 +2,10 @@ package arguments
 
 import "fmt"
 
+const (
+	unaryValue = "true"
+)
+
 type Argument interface {
 	GetName() string
 	String() string
@@ -9,18 +13,31 @@ type Argument interface {
 	Description() string
 }
 
-type argument struct {
+type binaryArgument struct {
 	name  *string
 	value *string
 	desc  *string
 }
 
-func (arg argument) GetName() string     { return *arg.name }
-func (arg argument) Value() string       { return *arg.value }
-func (arg argument) Description() string { return *arg.desc }
+func (arg binaryArgument) GetName() string     { return *arg.name }
+func (arg binaryArgument) Value() string       { return *arg.value }
+func (arg binaryArgument) Description() string { return *arg.desc }
 
-func (arg argument) String() string {
-	return fmt.Sprintf("name '%v', value '%v'", *arg.name, *arg.value)
+func (arg binaryArgument) String() string {
+	return fmt.Sprintf("name '%v', value '%v', desc: %v", *arg.name, *arg.value, *arg.desc)
+}
+
+type unaryArgument struct {
+	name *string
+	desc *string
+}
+
+func (arg unaryArgument) GetName() string     { return *arg.name }
+func (arg unaryArgument) Value() string       { return unaryValue }
+func (arg unaryArgument) Description() string { return *arg.desc }
+
+func (arg unaryArgument) String() string {
+	return fmt.Sprintf("name '%v', value '%v', desc: %v", *arg.name, unaryValue, *arg.desc)
 }
 
 type argError struct {

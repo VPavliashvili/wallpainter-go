@@ -27,11 +27,10 @@ func TestGetArguments(t *testing.T) {
 		"-h", "-p", picturesDir,
 	}
 	want := []Argument{
-		argument{
+		unaryArgument{
 			name:  setValue("-h"),
-			value: setValue(""),
 		},
-		argument{
+		binaryArgument{
 			name:  setValue("-p"),
 			value: setValue(picturesDir),
 		},
@@ -63,32 +62,31 @@ func TestCreateValidArgument(t *testing.T) {
 	home, _ := os.UserHomeDir()
 	picturesDir := fmt.Sprintf("%v/Pictures/", home)
 
-	var testItem = func(key string, value string, want argument) {
+	var testItem = func(key string, value string, want Argument) {
 		got, err := createArgument(key, value)
 		if err != nil {
 			t.Errorf("error is not expected here. got %v, want %v", got, want)
 		}
-		assertEqual(t, got.Value(), *want.value)
-		assertEqual(t, got.GetName(), *want.name)
+        assertEqual(t, want.Value(), got.Value())
+        assertEqual(t, want.GetName(), got.GetName())
 	}
 
 	data := []struct {
 		key   string
 		value string
-		want  argument
+		want  Argument
 	}{
 		{
 			key:   "-h",
 			value: "",
-			want: argument{
+			want: unaryArgument{
 				name:  setValue("-h"),
-				value: setValue(""),
 			},
 		},
 		{
 			key:   "--path",
 			value: picturesDir,
-			want: argument{
+			want: binaryArgument{
 				name:  setValue("--path"),
 				value: setValue(picturesDir),
 			},
