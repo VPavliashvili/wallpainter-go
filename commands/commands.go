@@ -1,17 +1,18 @@
 package commands
 
-var availableCommands []command
+import (
+	"github.com/VPavliashvili/slideshow-go/arguments"
+)
 
-type command interface {
-	getName() string
+type Command interface {
+	String() string
+	ArgNames() [][]string
 	Execute() error
+	SetArguments([]arguments.Argument)
+
+	arguments() []arguments.Argument
 }
 
-func setup() {
-	helpcmd := help{
-		Arg:  args.Help,
-		text: "help text placeholder",
-	}
-
-	availableCommands = append(availableCommands, helpcmd)
+var availableCommands = []Command{
+	&help{},
 }

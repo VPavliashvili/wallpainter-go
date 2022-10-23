@@ -1,30 +1,24 @@
 package main
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/VPavliashvili/slideshow-go/arguments"
-)
-
-type defaultTrimmer struct{}
-
-func (defaultTrimmer) Trim(args []string) ([]string, error) {
-	if len(args) < 1 {
-		return nil, fmt.Errorf("args parameter is problematic. args: %v", args)
-	}
-	return args[1:], nil
-}
+import "github.com/VPavliashvili/slideshow-go/processor"
 
 func main() {
 
-	osArgs := os.Args
-    args, err := arguments.GetArguments(osArgs, defaultTrimmer{})
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println(args)
+	//osArgs := os.Args[1:]
 
+	//args, err := arguments.GetArguments(osArgs)
+	//if err != nil {
+		//panic(err)
+	//}
+
+	//path := args[0].Value()
+	//value := args[1].Value()
+	//recursive, _ := strconv.ParseBool(value)
+	//pictures, _ := iohandler.GetPictures(path, recursive)
+
+	//fmt.Println(pictures)
+
+    processor.Process()
 }
 
 //func printPicturesFromDirectory() {

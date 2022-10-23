@@ -22,7 +22,7 @@ func TestGetArguments(t *testing.T) {
 	}
 	want := []Argument{
 		unaryArgument{
-			name:  setValue("-h"),
+			name: setValue("-h"),
 		},
 		binaryArgument{
 			name:  setValue("-p"),
@@ -38,17 +38,54 @@ func TestGetArguments(t *testing.T) {
 		t.Errorf("wrong number of arguments have returned. got %v, want %v", len(got), 2)
 	}
 
-    var count int
+	var count int
 	for _, arg := range got {
 		for _, wnt := range want {
 			if arg.GetName() == wnt.GetName() {
 				equal(arg, wnt)
-                count++
+				count++
 			}
 		}
 	}
-    if count != len(got) {
-        t.Errorf("not two of expected args are equal. got %v, want %v", count, len(got))
+	if count != len(got) {
+		t.Errorf("not two of expected args are equal. got %v, want %v", count, len(got))
+	}
+}
+
+func TestCreateArgument_ForUnary_Binary(t *testing.T) {
+	home, _ := os.UserHomeDir()
+	picturesDir := fmt.Sprintf("%v/Pictures/", home)
+
+	fake := []struct {
+		key   string
+		value string
+		want  Argument
+	}{
+		{
+			key:   "--path",
+			value: picturesDir,
+			want: binaryArgument{
+				name:  setValue("--path"),
+				value: &picturesDir,
+				desc: new(string),
+			},
+		},
+		{
+			key:   "-h",
+			value: "",
+			want:  unaryArgument{
+				name: setValue("-h"),
+				desc: new(string),
+			},
+		},
+	}
+
+    for _, item := range fake {
+        get, _ := createArgument(item.key, item.value)
+        want := item.want
+        if get.GetName() != want.GetName() || get.Value() != want.Value() {
+            t.Errorf("error in createArgument\nget\n%vwant\n%v\ncase\n%v", get, want, item)
+        }
     }
 }
 
@@ -61,8 +98,8 @@ func TestCreateValidArgument(t *testing.T) {
 		if err != nil {
 			t.Errorf("error is not expected here. got %v, want %v", got, want)
 		}
-        assertEqual(t, want.Value(), got.Value())
-        assertEqual(t, want.GetName(), got.GetName())
+		assertEqual(t, want.Value(), got.Value())
+		assertEqual(t, want.GetName(), got.GetName())
 	}
 
 	data := []struct {
@@ -74,7 +111,7 @@ func TestCreateValidArgument(t *testing.T) {
 			key:   "-h",
 			value: "",
 			want: unaryArgument{
-				name:  setValue("-h"),
+				name: setValue("-h"),
 			},
 		},
 		{

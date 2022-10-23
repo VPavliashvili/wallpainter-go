@@ -20,7 +20,7 @@ func isPicture(extension string) bool {
 	return false
 }
 
-//this extracts all pircture files including subdirectory content
+// this extracts all pircture files including subdirectory content
 func handleRecursively(directory string) ([]string, error) {
 	var pictures []string
 	err := filepath.WalkDir(directory, func(path string, d fs.DirEntry, err error) error {
@@ -44,28 +44,28 @@ func handleRecursively(directory string) ([]string, error) {
 
 // this ignores subdirectories in the passed directory on a given function argument
 func handleNonRecursively(directory string) ([]string, error) {
-    rootAbs, _ := filepath.Abs(directory)
-    var pictures []string
-    err := filepath.WalkDir(directory, func(path string, d fs.DirEntry, err error) error {
-        if err != nil {
-            return err
-        }
+	rootAbs, _ := filepath.Abs(directory)
+	var pictures []string
+	err := filepath.WalkDir(directory, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
 
-        abs, _ := filepath.Abs(path)
-        if d.IsDir() && abs != rootAbs {
-            return fs.SkipDir
-        }
-        if !d.IsDir() && isPicture(filepath.Ext(path)){
-            pictures = append(pictures, path)
-        }
-        return nil
-    })
-    
-    if err != nil {
-        return nil, err
-    }
+		abs, _ := filepath.Abs(path)
+		if d.IsDir() && abs != rootAbs {
+			return fs.SkipDir
+		}
+		if !d.IsDir() && isPicture(filepath.Ext(path)) {
+			pictures = append(pictures, path)
+		}
+		return nil
+	})
 
-    return pictures, nil
+	if err != nil {
+		return nil, err
+	}
+
+	return pictures, nil
 }
 
 func GetPictures(directory string, recursive bool) ([]string, error) {

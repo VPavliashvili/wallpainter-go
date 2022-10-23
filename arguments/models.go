@@ -50,9 +50,9 @@ func (err argError) Error() string {
 }
 
 type parseError struct {
-    passedArgs []string
+	passedArgs []string
 }
 
 func (err parseError) Error() string {
-    return fmt.Sprintf("parseError {invalid arguments: {%v}}", err.passedArgs)
+	return fmt.Sprintf("parseError {invalid arguments: {%v}}", err.passedArgs)
 }

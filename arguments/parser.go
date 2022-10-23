@@ -4,34 +4,32 @@ import (
 	"strings"
 )
 
-type OsArgsTrimmer interface {
-	Trim([]string) ([]string, error)
-}
-
 func getArgsFromConsole(osArgs []string) (map[string]string, error) {
 	result := make(map[string]string)
-    raw :=osArgs
 
-	if len(raw) == 1 {
-		result[raw[0]] = ""
+    if len(osArgs) == 0{
+        return map[string]string{}, nil
+    }
+	if len(osArgs) == 1 {
+		result[osArgs[0]] = ""
 		return result, nil
 	}
-	if isOptArg(raw[0]) {
-        return nil, parseError{passedArgs: raw}
+	if isOptArg(osArgs[0]) {
+		return nil, parseError{passedArgs: osArgs}
 	}
 
-	for i, arg := range raw {
+	for i, arg := range osArgs {
 		if isOptArg(arg) {
 			opt := arg
-			cmd := raw[i-1]
+			cmd := osArgs[i-1]
 			if !isCmdArg(cmd) {
-				return nil, parseError{passedArgs: raw}
+				return nil, parseError{passedArgs: osArgs}
 			}
 			result[cmd] = opt
 		} else {
 			cmd := arg
-			if i < len(raw)-1 {
-				if isCmdArg(raw[i+1]) {
+			if i < len(osArgs)-1 {
+				if isCmdArg(osArgs[i+1]) {
 					result[cmd] = ""
 				}
 			} else {
