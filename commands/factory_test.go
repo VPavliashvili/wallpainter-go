@@ -16,7 +16,7 @@ func TestGetCommand(t *testing.T) {
 			args: []arguments.Argument{
 				fakeArgument{name: "--invalid"},
 			},
-			want: &invalidArgumentCommand{},
+			want: &invalidArgumentCommand{input: []string{"--invalid"}},
 		},
 		{
 			args: []arguments.Argument{
@@ -27,11 +27,11 @@ func TestGetCommand(t *testing.T) {
 	}
 
 	for _, item := range fake {
-		get := GetCommand(item.args)
+		got := GetCommand(item.args)
 		want := item.want
 
-		if get.String() != want.String() {
-			t.Errorf("wrong command returned\nget\n%v\nwant\n%v\ncase\n%v", get, want, item.args)
+		if got.String() != want.String() {
+			t.Errorf("wrong command returned\ngot\n%v\nwant\n%v\ncase\n%v", got, want, item.args)
 		}
 	}
 }
