@@ -32,7 +32,3 @@ func (i *invalidArgumentCommand) SetArguments(args []arguments.Argument) {
     }
     i.input = names
 }
-
-func (i invalidArgumentCommand) arguments() []arguments.Argument {
-	return nil
-}

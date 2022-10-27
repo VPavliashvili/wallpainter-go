@@ -23,10 +23,6 @@ func (h help) ArgNames() [][]string {
 	}
 }
 
-func (h help) arguments() []arguments.Argument {
-	return h.args
-}
-
 func (h *help) SetArguments(args []arguments.Argument) {
 	for _, arg := range args {
 		name := arg.GetName()

@@ -72,13 +72,6 @@ func TestCreateCommand(t *testing.T) {
 			command: nil,
 			err:     emptyArgumentsError{},
 		},
-		{
-			args: []arguments.Argument{
-				fakeArgument{"--path"},
-			},
-			command: nil,
-			err:     notImplementedError{args: " --path"},
-		},
 	}
 
 	for _, item := range fake {

@@ -9,10 +9,9 @@ type Command interface {
 	ArgNames() [][]string
 	Execute() error
 	SetArguments([]arguments.Argument)
-
-	arguments() []arguments.Argument
 }
 
 var availableCommands = []Command{
 	&help{},
+    &slideshow{},
 }

@@ -38,6 +38,7 @@ func TestArgumentShouldOnlyBeHelp(t *testing.T) {
 		{
 			args: []arguments.Argument{
 				fakeArgument{name: "--help"},
+                fakeArgument{name: "-h"},
 			},
 			want: fakeArgument{name: "--help"},
 		},
