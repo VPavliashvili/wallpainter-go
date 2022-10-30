@@ -9,7 +9,7 @@ import (
 func GetCommand(args []arguments.Argument) commands.Command {
 	cmd, err := createCommand(args)
 	if err != nil {
-		res := commands.GetInvalidArgumentCommand()
+		res := &invalidArgumentCommand{}
 		res.SetArguments(args)
 		return res
 	}

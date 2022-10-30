@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/VPavliashvili/slideshow-go/arguments"
@@ -16,5 +17,8 @@ func Process() {
     args, _ := arguments.GetArguments(getArgs(os.Args))
     cmd := factory.GetCommand(args)
 
-    cmd.Execute()
+    err := cmd.Execute()
+    if err != nil {
+        fmt.Println(err)
+    }
 }

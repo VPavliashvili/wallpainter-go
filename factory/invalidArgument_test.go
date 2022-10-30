@@ -1,8 +1,8 @@
-package commands
+package factory
 
 import "testing"
 
-func TestString(t *testing.T) {
+func TestStringInvalidArg(t *testing.T) {
     fake := []struct{
         cmd invalidArgumentCommand
         want string

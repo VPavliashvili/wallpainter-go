@@ -14,8 +14,5 @@ type Command interface {
 var Available = []Command{
 	&help{},
     &slideshow{},
-}
-
-func GetInvalidArgumentCommand() *invalidArgumentCommand{
-    return &invalidArgumentCommand{}
+    createSetWallpaper(),
 }

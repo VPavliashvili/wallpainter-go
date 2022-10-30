@@ -5,10 +5,20 @@ import (
 	"path/filepath"
 )
 
+type IO interface {
+    Exist(file string) bool
+    IsPicture(file string) bool
+    SetWallpaper(file string) error
+}
+
 var extensions = []string{
 	".jpg",
 	".png",
 	".jpeg",
+}
+
+func IsPicture(file string) bool {
+    return isPicture(filepath.Ext(file))
 }
 
 func isPicture(extension string) bool {

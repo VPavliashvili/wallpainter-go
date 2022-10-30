@@ -33,7 +33,6 @@ func TestGetCommand(t *testing.T) {
 			args: []arguments.Argument{
 				fakeArgument{name: "--invalid"},
 			},
-			//want: &invalidArgumentCommand{input: []string{"--invalid"}},
 			want: "--invalid",
 		},
 		{
