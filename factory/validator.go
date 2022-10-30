@@ -1,4 +1,4 @@
-package commands
+package factory
 
 import (
 	"github.com/VPavliashvili/slideshow-go/arguments"

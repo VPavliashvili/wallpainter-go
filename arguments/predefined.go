@@ -62,5 +62,5 @@ func GetAllArgumentInfo() (result []ArgInfoPair) {
 			Description: arg.desc,
 		})
 	}
-	return
+	return result
 }

@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/VPavliashvili/slideshow-go/arguments"
-	"github.com/VPavliashvili/slideshow-go/commands"
+	"github.com/VPavliashvili/slideshow-go/factory"
 )
 
 func getArgs(raw []string) []string {
@@ -14,7 +14,7 @@ func getArgs(raw []string) []string {
 
 func Process() {
     args, _ := arguments.GetArguments(getArgs(os.Args))
-    cmd := commands.GetCommand(args)
+    cmd := factory.GetCommand(args)
 
     cmd.Execute()
 }

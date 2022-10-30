@@ -11,7 +11,11 @@ type Command interface {
 	SetArguments([]arguments.Argument)
 }
 
-var availableCommands = []Command{
+var Available = []Command{
 	&help{},
     &slideshow{},
+}
+
+func GetInvalidArgumentCommand() *invalidArgumentCommand{
+    return &invalidArgumentCommand{}
 }

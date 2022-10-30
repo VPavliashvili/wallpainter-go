@@ -27,3 +27,11 @@ https://www.geeksforgeeks.org/command-line-arguments-in-golang/ <- commang line-
 
 SHENISHVNA
     jer unda davwero /bin/slideshow.py-is chamnacvlebeli golangit da eg avamushavo, zemotxsenebuli gegmebi amis shemdegi nabijia
+
+
+
+--dev notes
+titoeuli command calkea gasatani factory-sgan
+factory-is testebi ar unda iyos damokidebuli sxvadasxva commandis concrete implementation-ze
+mgoni ase jobia rom gavaketo folder factory/ da iq gavitano commands/ folderidan
+factory.go da mastan related concrete da test .go failebi
