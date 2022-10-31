@@ -2,6 +2,9 @@ package commands
 
 import (
 	"github.com/VPavliashvili/slideshow-go/arguments"
+	"github.com/VPavliashvili/slideshow-go/commands/help"
+	sw "github.com/VPavliashvili/slideshow-go/commands/setWallpaper"
+	ss "github.com/VPavliashvili/slideshow-go/commands/slideshow"
 )
 
 type Command interface {
@@ -12,7 +15,7 @@ type Command interface {
 }
 
 var Available = []Command{
-	&help{},
-    &slideshow{},
-    createSetWallpaper(),
+	help.Create(),
+    ss.Create(),
+    sw.Create(),
 }

@@ -1,4 +1,4 @@
-package commands
+package help
 
 import (
 	"fmt"
@@ -8,6 +8,10 @@ import (
 )
 
 const helpInfoTabSize = "      "
+
+func Create() *help{
+    return &help{}
+}
 
 type help struct {
 	args []arguments.Argument

@@ -1,4 +1,4 @@
-package commands
+package help
 
 import (
 	"fmt"
@@ -7,6 +7,34 @@ import (
 
 	"github.com/VPavliashvili/slideshow-go/arguments"
 )
+
+type fakeArgument struct {
+	name string
+}
+
+func (f fakeArgument) GetName() string {
+	return f.name
+}
+func (f fakeArgument) String() string {
+	return f.name
+}
+func (f fakeArgument) Value() string {
+	return "fake"
+}
+func (f fakeArgument) Description() string {
+	return "fake"
+}
+
+func TestGetArgNames(t *testing.T) {
+	want := [][]string{
+		{"-h", "--help"},
+	}
+	got := help{}.ArgNames()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("ArgNames() error\ngot\n%v\nwant\n%v", got, want)
+	}
+}
 
 func TestShouldOnlyHaveOneArgument(t *testing.T) {
 	cmd := &help{}
@@ -38,7 +66,7 @@ func TestArgumentShouldOnlyBeHelp(t *testing.T) {
 		{
 			args: []arguments.Argument{
 				fakeArgument{name: "--help"},
-                fakeArgument{name: "-h"},
+				fakeArgument{name: "-h"},
 			},
 			want: fakeArgument{name: "--help"},
 		},

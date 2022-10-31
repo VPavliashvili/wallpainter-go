@@ -1,4 +1,4 @@
-package commands
+package slideshow
 
 import (
 	"fmt"
@@ -8,6 +8,10 @@ import (
 	"github.com/VPavliashvili/slideshow-go/iohandler"
 	"github.com/VPavliashvili/slideshow-go/utils"
 )
+
+func Create() *slideshow{
+    return &slideshow{}
+}
 
 type slideshow struct {
 	arguments []arguments.Argument

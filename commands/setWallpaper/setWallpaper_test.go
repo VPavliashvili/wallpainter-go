@@ -1,4 +1,4 @@
-package commands
+package setwallpaper_test
 
 import (
 	"errors"
@@ -6,22 +6,29 @@ import (
 	"testing"
 
 	"github.com/VPavliashvili/slideshow-go/arguments"
+	setwallpaper "github.com/VPavliashvili/slideshow-go/commands/setWallpaper"
 )
 
-func TestStringSetWallpaper(t *testing.T) {
+func TestString(t *testing.T) {
 	want := "somePath"
 
-	got := setWallpaper{imgPath: "somePath"}.String()
+	cmd := setwallpaper.Create()
+	fake := cmdFakeArg{
+		name:  "--imgpath",
+		value: "somePath",
+	}
+	cmd.SetArguments([]arguments.Argument{fake})
+    got := cmd.String()
 	if got != want {
 		t.Errorf("String() error\ngot\n%v\nwant\n%v", got, want)
 	}
 }
 
-func TestArgNamesSetWallpaper(t *testing.T) {
+func TestArgNames(t *testing.T) {
 	want := [][]string{
 		{"--imgpath"},
 	}
-	got := setWallpaper{}.ArgNames()
+	got := setwallpaper.Create().ArgNames()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ArgNames() error\ngot\n%v\nwant\n%v", got, want)
@@ -29,7 +36,7 @@ func TestArgNamesSetWallpaper(t *testing.T) {
 
 }
 
-func TestSetArgumentsSetWallpaper(t *testing.T) {
+func TestSetArguments(t *testing.T) {
 	fake := []struct {
 		args []arguments.Argument
 		want string
@@ -50,9 +57,9 @@ func TestSetArgumentsSetWallpaper(t *testing.T) {
 	}
 
 	for _, item := range fake {
-		cmd := &setWallpaper{}
+		cmd := setwallpaper.Create()
 		cmd.SetArguments(item.args)
-		got := cmd.imgPath
+		got := cmd.ImgPath
 		want := item.want
 
 		if got != want {
@@ -61,20 +68,7 @@ func TestSetArgumentsSetWallpaper(t *testing.T) {
 	}
 }
 
-type fakeio struct{}
-
-func (f fakeio) Exist(file string) bool {
-	return file == "validpath.pnj" || file == "validfile"
-}
-
-func (f fakeio) IsPicture(file string) bool {
-	return file == "validpath.pnj"
-}
-func (f fakeio) SetWallpaper(file string) error {
-	return nil
-}
-
-func TestExecuteSetWallpaper(t *testing.T) {
+func TestExecute(t *testing.T) {
 	fake := []struct {
 		imgpath string
 		want    error
@@ -85,17 +79,18 @@ func TestExecuteSetWallpaper(t *testing.T) {
 		},
 		{
 			imgpath: "invalidpath",
-			want:    invalidPathError{path: "invalidpath"},
+			want:    setwallpaper.InvalidPathError{Path: "invalidpath"},
 		},
 		{
 			imgpath: "validfile",
-			want:    notPictureError{img: "validfile"},
+			want:    setwallpaper.NotPictureError{File: "validfile"},
 		},
 	}
 
 	for _, item := range fake {
-		cmd := setWallpaper{imgPath: item.imgpath}
-		cmd.setup(fakeio{})
+		cmd := setwallpaper.Create()
+        cmd.ImgPath = item.imgpath
+		cmd.Setup(fakeio{})
 		want := item.want
 		got := cmd.Execute()
 
