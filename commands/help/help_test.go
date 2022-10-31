@@ -1,59 +1,37 @@
-package help
+package help_test
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/VPavliashvili/slideshow-go/arguments"
+	"github.com/VPavliashvili/slideshow-go/commands/help"
 )
 
-type fakeArgument struct {
-	name string
-}
-
-func (f fakeArgument) GetName() string {
-	return f.name
-}
-func (f fakeArgument) String() string {
-	return f.name
-}
-func (f fakeArgument) Value() string {
-	return "fake"
-}
-func (f fakeArgument) Description() string {
-	return "fake"
-}
-
-func TestGetArgNames(t *testing.T) {
+func TestArgNames(t *testing.T) {
 	want := [][]string{
 		{"-h", "--help"},
 	}
-	got := help{}.ArgNames()
+	got := help.Create().ArgNames()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ArgNames() error\ngot\n%v\nwant\n%v", got, want)
 	}
 }
 
-func TestShouldOnlyHaveOneArgument(t *testing.T) {
-	cmd := &help{}
-	args := []arguments.Argument{
-		fakeArgument{"-h"},
-		fakeArgument{},
-	}
-	cmd.SetArguments(args)
-	got := len(cmd.args)
-	want := 1
-	if got != want {
-		t.Errorf("should have thrown argument error. got: %v, want: %v", got, want)
+func TestString(t *testing.T) {
+	want := "help command"
+	got := help.Create().String()
+
+	if want != got {
+		t.Errorf("String() error\ngot\n%v\nwant\n%v", got, want)
 	}
 }
 
-func TestArgumentShouldOnlyBeHelp(t *testing.T) {
+func TestSetArguments(t *testing.T) {
 	cases := []struct {
 		args []arguments.Argument
-		want arguments.Argument
+		want bool
 	}{
 		{
 			args: []arguments.Argument{
@@ -61,104 +39,73 @@ func TestArgumentShouldOnlyBeHelp(t *testing.T) {
 				fakeArgument{name: "-h"},
 				fakeArgument{name: "--path"},
 			},
-			want: fakeArgument{name: "-h"},
+			want: false,
 		},
 		{
 			args: []arguments.Argument{
 				fakeArgument{name: "--help"},
 				fakeArgument{name: "-h"},
 			},
-			want: fakeArgument{name: "--help"},
+			want: false,
 		},
 		{
 			args: []arguments.Argument{
 				fakeArgument{name: "--nothelp"},
 			},
-			want: nil,
+			want: false,
+		},
+		{
+			args: []arguments.Argument{
+				fakeArgument{name: "-h"},
+			},
+			want: true,
+		},
+		{
+			args: []arguments.Argument{
+				fakeArgument{name: "--help"},
+			},
+			want: true,
 		},
 	}
 
 	for _, item := range cases {
 		want := item.want
-		cmd := help{}
+		cmd := help.Create()
 		cmd.SetArguments(item.args)
-		if want == nil {
-			continue
-		}
-		got := cmd.args[0]
+
+		got := cmd.Value
 
 		if !reflect.DeepEqual(got, want) {
-			t.Errorf("help should only take -h or --help argument from the provided arguments list, got: %v, want: %v", got, want)
+			t.Errorf("SetArguments() error\ngot\n%v\nwant\n%v", got, want)
 		}
 	}
 }
 
-func TestGetNamesInfo(t *testing.T) {
+func TestExecute(t *testing.T) {
 	fake := []struct {
-		names []string
+		infos []arguments.ArgInfoPair
 		want  string
 	}{
 		{
-			names: []string{"--help", "-h"},
-			want:  "{--help, -h}",
-		},
-		{
-			names: []string{"-r"},
-			want:  "{-r}",
-		},
-	}
-
-	for _, v := range fake {
-		want := v.want
-		got := getNamesInfo(v.names)
-
-		if got != want {
-			t.Errorf("icorrect formatting of names info\ngot:  %v\nwant: %v", got, want)
-		}
-	}
-}
-
-func TestGetDescriptionsInfo(t *testing.T) {
-	fake := []struct {
-		desc string
-		want string
-	}{
-		{
-			desc: "some random nice command argument description",
-			want: "some random nice command argument description",
-		},
-	}
-
-	for _, v := range fake {
-		want := v.want
-		got := getDescriptionInfo(v.desc)
-
-		if got != want {
-			t.Errorf("incorrect formatting of description info\ngot:  ->%v\nwant: ->%v", got, want)
-		}
-	}
-}
-
-func TestHelpInfo(t *testing.T) {
-	fake := []struct {
-		info arguments.ArgInfoPair
-		want string
-	}{
-		{
-			info: arguments.ArgInfoPair{
-				Names:       []string{"--cmd", "-c"},
-				Description: "description for this cmd",
+			infos: []arguments.ArgInfoPair{
+				{
+					Names:       []string{"--idkName"},
+					Description: "idk description",
+				},
 			},
-			want: fmt.Sprintf("{--cmd, -c}\n%vdescription for this cmd\n", helpInfoTabSize),
+			want: "name: [--idkName]\ndescription: idk description",
 		},
 	}
 
-	for _, v := range fake {
-		want := v.want
-		got := getArgumentHelp(v.info)
+	for _, item := range fake {
+		cmd := help.Create()
+		cmd.Setup(fakebuilder{}, item.infos)
+		want := item.want
+		cmd.Execute()
+		got := cmd.HelpText
 
 		if got != want {
-			t.Errorf("incorrect formatting of whole help message\ngot:  \n%v\nwant: \n%v", got, want)
+			t.Errorf("Execute() error\ngot\n%v\nwant\n%v\ncase\n%v", got, want, item)
 		}
 	}
 
