@@ -9,6 +9,7 @@ import (
 
 type invalidArgumentCommand struct {
 	input []string
+    err error
 }
 
 func (i invalidArgumentCommand) String() string {
@@ -20,7 +21,7 @@ func (i invalidArgumentCommand) ArgNames() [][]string {
 }
 
 func (i invalidArgumentCommand) Execute() error {
-    msg := fmt.Sprintf("wrong input specified %v\nsee --help/-h", i.String())
+    msg := fmt.Sprintf("wrong input specified %v\nerror: %v\nsee --help/-h", i.String(), i.err)
     fmt.Println(msg)
     return nil
 }

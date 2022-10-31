@@ -49,12 +49,12 @@ var arguments = []struct {
 		},
 	},
 	{
-            names: []string{"--imgpath"},
-            desc: "set new wallpaper\n      usage: --imgpath /your/image.png",
-            validate: func(s string) bool {
-                return true
-            },
-        },
+		names: []string{"--imgpath"},
+		desc:  "set new wallpaper\n      usage: --imgpath /your/image.png",
+		validate: func(s string) bool {
+			return true
+		},
+	},
 }
 
 type ArgInfoPair struct {

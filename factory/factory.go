@@ -11,6 +11,7 @@ func GetCommand(args []arguments.Argument) commands.Command {
 	if err != nil {
 		res := &invalidArgumentCommand{}
 		res.SetArguments(args)
+        res.err = err
 		return res
 	}
 	cmd.SetArguments(args)
