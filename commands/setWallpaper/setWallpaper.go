@@ -21,7 +21,7 @@ func (s *setWallpaper) Setup(io iohandler.IO) {
 }
 
 func (s setWallpaper) String() string {
-	return s.ImgPath
+    return "setWallpaper: " + s.ImgPath
 }
 
 func (s setWallpaper) ArgNames() [][]string {

@@ -31,7 +31,8 @@ SHENISHVNA
 
 
 --dev notes
-titoeuli command calkea gasatani factory-sgan
-factory-is testebi ar unda iyos damokidebuli sxvadasxva commandis concrete implementation-ze
-mgoni ase jobia rom gavaketo folder factory/ da iq gavitano commands/ folderidan
-factory.go da mastan related concrete da test .go failebi
+Flag -> Option
+
+one flag can have 0 or more options
+first argument should always be Flag and then
+it's options are expected

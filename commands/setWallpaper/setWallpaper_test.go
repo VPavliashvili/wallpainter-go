@@ -10,7 +10,7 @@ import (
 )
 
 func TestString(t *testing.T) {
-	want := "somePath"
+    want := "setWallpaper: somePath"
 
 	cmd := setwallpaper.Create()
 	fake := cmdFakeArg{
