@@ -1,6 +1,6 @@
-package commandbuilder_test
+package args_test
 
-import "github.com/VPavliashvili/slideshow-go/configdata"
+import "github.com/VPavliashvili/slideshow-go/cmdconf"
 
 const (
 	flag1    = "flag1"
@@ -12,11 +12,11 @@ const (
 
 type fakeCmdData struct{}
 
-func (f fakeCmdData) GetAllCommandData() []configdata.CmdData {
-	return []configdata.CmdData{
+func (f fakeCmdData) GetAllCommandData() []cmdconf.Data{
+	return []cmdconf.Data{
 		{
 			FlagName: flag1,
-			Opts: []configdata.Opt{
+			Opts: []cmdconf.Opt{
 				{
 					Name: opt11,
                     Value: optval11,
@@ -29,7 +29,7 @@ func (f fakeCmdData) GetAllCommandData() []configdata.CmdData {
 		},
 		{
 			FlagName: flag2,
-			Opts:     []configdata.Opt{},
+			Opts:     []cmdconf.Opt{},
 		},
 	}
 }

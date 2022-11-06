@@ -1,4 +1,4 @@
-package commandbuilder
+package args
 
 import (
 	"fmt"
