@@ -1,41 +1,50 @@
 package commandbuilder_test
 
 import (
+	"fmt"
 	"testing"
 
 	commandbuilder "github.com/VPavliashvili/slideshow-go/commandBuilder"
-	"github.com/VPavliashvili/slideshow-go/configdata"
 )
 
-const valid1 = "valid1"
-const valid2 = "valid2"
+func testCase(t *testing.T, item struct {
+	args    []string
+	isError bool
+}, builder commandbuilder.Builder) (bool, string) {
+	got := builder.Build(item.args)
+	isErr := item.isError
 
-type fakeCmdData struct{}
-
-func (f fakeCmdData) Flags() []configdata.Flag {
-	return []configdata.Flag{
-		valid1, valid2,
+	if got != nil != isErr {
+		var msg string
+		if isErr {
+			msg = "Should have returned an error"
+		} else {
+			msg = "Args are valid, shouln't have returned an error"
+		}
+		res := fmt.Sprintf("%v\ngot\n%v\ncase\n%v", msg, got, item.args)
+		return true, res
 	}
+	return false, ""
 }
 
-func TestShouldContainExactlyOneFlagOnZeroIndex(t *testing.T) {
-	flags := fakeCmdData{}
-    builder := commandbuilder.GetBuilder(flags)
+func TestShouldReturnErrorWhenNotStartingWithFlag(t *testing.T) {
+	commandsData := fakeCmdData{}
+	builder := commandbuilder.GetBuilder(commandsData)
 
 	cases := []struct {
 		args    []string
 		isError bool
 	}{
 		{
-			args:    []string{valid1, "idk"},
+			args:    []string{flag1},
 			isError: false,
 		},
 		{
-			args:    []string{"notFlag", valid1},
+			args:    []string{"notFlag"},
 			isError: true,
 		},
 		{
-			args:    []string{valid1, valid2},
+			args:    []string{flag1, flag2},
 			isError: true,
 		},
 		{
@@ -45,16 +54,63 @@ func TestShouldContainExactlyOneFlagOnZeroIndex(t *testing.T) {
 	}
 
 	for _, item := range cases {
-		got := builder.Build(item.args)
-		isErr := item.isError
-		if got != nil != isErr {
-			var msg string
-			if isErr {
-				msg = "Should have returned an error"
-			} else {
-				msg = "Args are valid, shouln't have returned an error"
-			}
-			t.Errorf("%v\ngot\n%v\ncase\n%v", msg, got, item.args)
+		isFail, msg := testCase(t, item, builder)
+		if isFail {
+			t.Errorf(msg)
+		}
+	}
+}
+
+func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
+	commandsData := fakeCmdData{}
+	builder := commandbuilder.GetBuilder(commandsData)
+
+	cases := []struct {
+		args    []string
+		isError bool
+	}{
+		{
+			args:    []string{flag1, opt11, optval11, opt12},
+			isError: false,
+		},
+		{
+			args:    []string{flag1, opt11, optval11, opt12, "--idk"},
+			isError: true,
+		},
+		{
+			args:    []string{flag1, opt11, "", opt12},
+			isError: false,
+		},
+		{
+			args:    []string{flag1, opt11},
+			isError: false,
+		},
+		{
+			args:    []string{flag1, opt11, opt12},
+			isError: false,
+		},
+		{
+			args:    []string{flag2},
+			isError: false,
+		},
+		{
+			args:    []string{flag1, optval11}, // only optValue without actual opt is error
+			isError: true,
+		},
+		{
+			args:    []string{flag1, "--idk"}, //incompatible opt for flag is error
+			isError: true,
+		},
+		{
+			args:    []string{flag2, "idk"},
+			isError: true,
+		},
+	}
+
+	for _, item := range cases {
+		isFail, msg := testCase(t, item, builder)
+		if isFail {
+			t.Errorf(msg)
 		}
 	}
 }

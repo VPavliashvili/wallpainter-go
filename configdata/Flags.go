@@ -1,38 +1,22 @@
 package configdata
 
+import "strings"
+
 type Flag string
+type Opt struct {
+    Name string
+    Value string
+}
 
 type CmdData struct {
-	name Flag
+	FlagName Flag
+    Opts []Opt
 }
 
 type AllCommandData interface {
-	Flags() []Flag
+	GetAllCommandData() []CmdData
 }
 
-type allCmdData struct {
-	cmdData []CmdData
-}
-
-func (f allCmdData) Flags() (result []Flag) {
-    for _, item := range f.cmdData {
-        result = append(result, item.name)
-    }
-
-    return
-}
-
-func AvailableCommands() (result AllCommandData) {
-	result = allCmdData{
-		[]CmdData{
-			{
-				name: "--help",
-			},
-			{
-				name: "--imgpath",
-			},
-		},
-	}
-
-	return
+func IsOptName(arg string) bool {
+    return strings.HasPrefix(arg, "-")
 }
