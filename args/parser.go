@@ -1,26 +1,26 @@
 package args
 
 import (
-	"github.com/VPavliashvili/slideshow-go/cmdconf"
+	"github.com/VPavliashvili/slideshow-go/domain"
 	"golang.org/x/exp/slices"
 )
 
-func CreateParser(data cmdconf.AllCommandData) Parser {
+func CreateParser(data domain.AvailableArgumentsProvider) Parser {
 	return parser{
 		allCommandsData: data,
 	}
 }
 
 type Parser interface {
-	Parse([]string) (*cmdconf.Data, error)
+	Parse([]string) (*domain.Argument, error)
 }
 
 type parser struct {
-	allCommandsData cmdconf.AllCommandData
+	allCommandsData domain.AvailableArgumentsProvider
 }
 
-func (b parser) Parse(args []string) (*cmdconf.Data, error) {
-	cmdsData := b.allCommandsData.GetAllCommandData()
+func (b parser) Parse(args []string) (*domain.Argument, error) {
+	cmdsData := b.allCommandsData.Get()
 	flag := args[0]
 	optArgs := args[1:]
 
@@ -33,16 +33,16 @@ func (b parser) Parse(args []string) (*cmdconf.Data, error) {
 	return &result, nil
 }
 
-func getCmddata(flag string, optArgs []string) cmdconf.Data {
-	var result cmdconf.Data
-	result.FlagName = cmdconf.Flag(flag)
+func getCmddata(flag string, optArgs []string) domain.Argument {
+	var result domain.Argument
+	result.FlagName = domain.Flag(flag)
 	pairs := make(map[string]string)
 
 	for i := 0; i < len(optArgs); i++ {
 		arg := optArgs[i]
 		if i < len(optArgs)-1 {
 			next := optArgs[i+1]
-			if !cmdconf.IsOptName(next) {
+			if !domain.IsOptName(next) {
 				i++
 				pairs[arg] = next
 			} else {
@@ -54,7 +54,7 @@ func getCmddata(flag string, optArgs []string) cmdconf.Data {
 	}
 
 	for opt, val := range pairs {
-		result.Opts = append(result.Opts, cmdconf.Opt{
+		result.Opts = append(result.Opts, domain.Opt{
 			Name:  opt,
 			Value: val,
 		})
@@ -63,14 +63,14 @@ func getCmddata(flag string, optArgs []string) cmdconf.Data {
 	return result
 }
 
-func checkAllEnteredFlagOptionArgumentsAreValid(flag string, optArgs []string, cmdsData []cmdconf.Data) bool {
-	if len(optArgs) > 0 && !cmdconf.IsOptName(optArgs[0]) {
+func checkAllEnteredFlagOptionArgumentsAreValid(flag string, optArgs []string, cmdsData []domain.Argument) bool {
+	if len(optArgs) > 0 && !domain.IsOptName(optArgs[0]) {
 		return false
 	}
 
 	var optNames []string
 	for _, cmdData := range cmdsData {
-		if cmdData.FlagName == cmdconf.Flag(flag) {
+		if cmdData.FlagName == domain.Flag(flag) {
 			for _, opt := range cmdData.Opts {
 				optNames = append(optNames, opt.Name)
 			}
@@ -80,7 +80,7 @@ func checkAllEnteredFlagOptionArgumentsAreValid(flag string, optArgs []string, c
 
 	if len(optArgs) > 0 {
 		for _, optArg := range optArgs {
-			if cmdconf.IsOptName(optArg) && !slices.Contains(optNames, optArg) {
+			if domain.IsOptName(optArg) && !slices.Contains(optNames, optArg) {
 				return false
 			}
 		}
@@ -88,19 +88,19 @@ func checkAllEnteredFlagOptionArgumentsAreValid(flag string, optArgs []string, c
 	return true
 }
 
-func hasOnlyOneFlagArgumentAtStartingPosition(flag string, args []string, allCmdData []cmdconf.Data) bool {
-	var validFlags []cmdconf.Flag
+func hasOnlyOneFlagArgumentAtStartingPosition(flag string, args []string, allCmdData []domain.Argument) bool {
+	var validFlags []domain.Flag
 
 	for _, item := range allCmdData {
 		validFlags = append(validFlags, item.FlagName)
 	}
 
-	if !slices.Contains(validFlags, cmdconf.Flag(flag)) {
+	if !slices.Contains(validFlags, domain.Flag(flag)) {
 		return false
 	}
 
 	for i := 1; i < len(args); i++ {
-		arg := cmdconf.Flag(args[i])
+		arg := domain.Flag(args[i])
 		if slices.Contains(validFlags, arg) {
 			return false
 		}

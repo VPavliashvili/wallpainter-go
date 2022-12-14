@@ -1,6 +1,6 @@
 package args_test
 
-import "github.com/VPavliashvili/slideshow-go/cmdconf"
+import "github.com/VPavliashvili/slideshow-go/domain"
 
 const (
 	flag1    = "flag1"
@@ -12,11 +12,11 @@ const (
 
 type fakeCmdData struct{}
 
-func (f fakeCmdData) GetAllCommandData() []cmdconf.Data{
-	return []cmdconf.Data{
+func (f fakeCmdData) Get() []domain.Argument{
+	return []domain.Argument{
 		{
 			FlagName: flag1,
-			Opts: []cmdconf.Opt{
+			Opts: []domain.Opt{
 				{
 					Name: opt11,
                     Value: optval11,
@@ -29,7 +29,7 @@ func (f fakeCmdData) GetAllCommandData() []cmdconf.Data{
 		},
 		{
 			FlagName: flag2,
-			Opts:     []cmdconf.Opt{},
+			Opts:     []domain.Opt{},
 		},
 	}
 }

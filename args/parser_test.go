@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/VPavliashvili/slideshow-go/args"
-	"github.com/VPavliashvili/slideshow-go/cmdconf"
+	"github.com/VPavliashvili/slideshow-go/domain"
 )
 
 func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
@@ -91,13 +91,13 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 
 	cases := []struct {
 		args []string
-		want *cmdconf.Data
+		want *domain.Argument
 	}{
 		{
 			args: []string{flag1, opt11, optval11, opt12},
-			want: &cmdconf.Data{
+			want: &domain.Argument{
 				FlagName: flag1,
-				Opts: []cmdconf.Opt{
+				Opts: []domain.Opt{
 					{
 						Name:  opt11,
 						Value: optval11,
@@ -110,9 +110,9 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		},
 		{
 			args: []string{flag1, opt12},
-			want: &cmdconf.Data{
+			want: &domain.Argument{
 				FlagName: flag1,
-				Opts: []cmdconf.Opt{
+				Opts: []domain.Opt{
 					{
 						Name: opt12,
 					},
@@ -121,16 +121,16 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		},
 		{
 			args: []string{flag2},
-			want: &cmdconf.Data{
+			want: &domain.Argument{
 				FlagName: flag2,
-				Opts:     []cmdconf.Opt{},
+				Opts:     []domain.Opt{},
 			},
 		},
 		{
 			args: []string{flag1, opt11, opt12},
-			want: &cmdconf.Data{
+			want: &domain.Argument{
 				FlagName: flag1,
-				Opts: []cmdconf.Opt{
+				Opts: []domain.Opt{
 					{
 						Name: opt11,
 					},
@@ -142,9 +142,9 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		},
 		{
 			args: []string{flag1, opt12, opt11, optval11},
-			want: &cmdconf.Data{
+			want: &domain.Argument{
 				FlagName: flag1,
-				Opts: []cmdconf.Opt{
+				Opts: []domain.Opt{
 					{
 						Name: opt12,
 					},
