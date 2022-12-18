@@ -16,21 +16,35 @@ func TestCreate(t *testing.T) {
 	}{
 		{
 			args: []string{"flag1"},
-			want: fakeCommand{flagName: "flag1"},
+			want: fakeCommand{
+				flagName: "flag1",
+				opts:     []domain.Opt{{
+					Name:  "d",
+					Value: "k",
+				}},
+			},
 		},
 		{
 			args: []string{"flag2"},
-			want: fakeCommand{flagName: "flag2"},
+			want: fakeCommand{
+				flagName: "flag2",
+				opts:     []domain.Opt{
+                    {
+                    	Name:  "opt1",
+                    	Value: "val1",
+                    },
+                },
+			},
 		},
 	}
 
 	for _, item := range cases {
 		parser := fakeParser{}
-        cmdfactory.Setup(fakeAvailableCommands, parser)
+		factory := cmdfactory.Create(fakeAvailableCommands, parser)
 
-		got, _ := cmdfactory.Create(item.args)
+		got, _ := factory.CreateCommand(item.args)
 
-		want := item.want
+		want := &item.want
 
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("error in Create\ngot\n%v\nwant\n%v\n", got, want)
@@ -40,26 +54,26 @@ func TestCreate(t *testing.T) {
 
 func TestNonExistentCommand(t *testing.T) {
 	cases := []struct {
-        args []string
-		want   error
+		args []string
+		want error
 	}{
 		{
-            args: []string{"nonexistent"},
+			args: []string{"nonexistent"},
 			want: domain.NonExistentCommandError{
-				Argument: *getFakeArgument("nonexistent"),
+				Argument: *getFakeArgument("nonexistent", []domain.Opt{}),
 			},
 		},
 		{
-            args: []string{"flag1"},
-			want:   nil,
+			args: []string{"flag1"},
+			want: nil,
 		},
 	}
 
 	for _, item := range cases {
 		parser := fakeParser{}
-        cmdfactory.Setup(fakeAvailableCommands, parser)
+		factory := cmdfactory.Create(fakeAvailableCommands, parser)
 
-		_, got := cmdfactory.Create(item.args)
+		_, got := factory.CreateCommand(item.args)
 
 		want := item.want
 

@@ -1,31 +1,25 @@
 package processor
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/VPavliashvili/slideshow-go/cmds"
+)
+
 func getArgs(raw []string) []string {
 	args := raw[1:]
 	return args
 }
 
 func Process() {
-	//args, _ := arguments.GetArguments(getArgs(os.Args))
-	//cmd := factory.GetCommand(args)
+	input := getArgs(os.Args)
+	command, err := cmds.Create(input)
 
-	//err := cmd.Execute()
-	//if err != nil {
-	//fmt.Println(err)
-	//}
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	//input := getArgs(os.Args)
-
-	//parser := args.GetParser()
-	//commands := cmds.GetProvider()
-
-	//cmdfactory.Setup(commands, parser)
-	//command, err := cmdfactory.Create(input)
-
-    //if (err != nil){
-        //fmt.Print(err.Error())
-        //return
-    //}
-
-    //command.Execute()
+	command.Execute()
 }

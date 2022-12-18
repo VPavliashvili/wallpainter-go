@@ -19,5 +19,10 @@ var availableArgs = []domain.Argument{
 	{
 		FlagName: "--help",
 		Opts:     []domain.Opt{},
+        Description: "Prints this menu",
 	},
+}
+
+func GetAll() []domain.Argument{
+    return availableArgs
 }

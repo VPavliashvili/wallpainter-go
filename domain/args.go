@@ -9,6 +9,7 @@ import (
 type Argument struct {
 	FlagName Flag
 	Opts     []Opt
+    Description string
 }
 
 func (arg Argument) Equals(other Argument) bool {
