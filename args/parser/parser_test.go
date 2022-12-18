@@ -1,15 +1,15 @@
-package args_test
+package parser_test
 
 import (
 	"testing"
 
-	"github.com/VPavliashvili/slideshow-go/args"
+	"github.com/VPavliashvili/slideshow-go/args/parser"
 	"github.com/VPavliashvili/slideshow-go/domain"
 )
 
 func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
 	commandsData := fakeCmdData{}
-	parser := args.CreateParser(commandsData)
+	parser := parser.Create(commandsData)
 
 	cases := []struct {
 		args    []string
@@ -87,7 +87,7 @@ func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
 
 func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 	commandsData := fakeCmdData{}
-	parser := args.CreateParser(commandsData)
+	parser := parser.Create(commandsData)
 
 	cases := []struct {
 		args []string

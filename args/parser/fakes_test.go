@@ -1,4 +1,4 @@
-package args_test
+package parser_test
 
 import "github.com/VPavliashvili/slideshow-go/domain"
 

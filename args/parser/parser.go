@@ -1,12 +1,12 @@
-package args
+package parser
 
 import (
 	"github.com/VPavliashvili/slideshow-go/domain"
 	"golang.org/x/exp/slices"
 )
 
-func CreateParser(data domain.AvailableArgumentsProvider) Parser {
-	return parser{
+func Create(data domain.AvailableArgumentsProvider) Parser {
+	return concreteParser{
 		allCommandsData: data,
 	}
 }
@@ -15,11 +15,11 @@ type Parser interface {
 	Parse([]string) (*domain.Argument, error)
 }
 
-type parser struct {
+type concreteParser struct {
 	allCommandsData domain.AvailableArgumentsProvider
 }
 
-func (b parser) Parse(args []string) (*domain.Argument, error) {
+func (b concreteParser) Parse(args []string) (*domain.Argument, error) {
 	cmdsData := b.allCommandsData.Get()
 	flag := args[0]
 	optArgs := args[1:]

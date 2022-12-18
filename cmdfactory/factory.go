@@ -1,15 +1,14 @@
 package cmdfactory
 
 import (
-	"github.com/VPavliashvili/slideshow-go/args"
+	"github.com/VPavliashvili/slideshow-go/args/parser"
 	"github.com/VPavliashvili/slideshow-go/domain"
 )
 
 var availableCommands domain.AvailableCommandsProvider
-var argsparser args.Parser
+var argsparser parser.Parser
 
-func Setup(commandsprovider domain.AvailableCommandsProvider,
-	parser args.Parser) {
+func Setup(commandsprovider domain.AvailableCommandsProvider, parser parser.Parser) {
 	availableCommands = commandsprovider
 	argsparser = parser
 }

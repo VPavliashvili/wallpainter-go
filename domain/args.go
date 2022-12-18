@@ -3,6 +3,7 @@ package domain
 import (
 	"reflect"
 	"sort"
+	"strings"
 )
 
 type Argument struct {
@@ -40,3 +41,8 @@ type Opt struct {
 type AvailableArgumentsProvider interface {
 	Get() []Argument
 }
+
+func IsOptName(arg string) bool {
+	return strings.HasPrefix(arg, "-")
+}
+
