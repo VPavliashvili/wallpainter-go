@@ -11,25 +11,24 @@ import (
 
 func TestCreate(t *testing.T) {
 	cases := []struct {
-		parser fakeParser
-		want   fakeCommand
+		args []string
+		want fakeCommand
 	}{
 		{
-			parser: fakeParser{fakearg: "flag1"},
-			want:   fakeCommand{flagName: "flag1"},
+			args: []string{"flag1"},
+			want: fakeCommand{flagName: "flag1"},
 		},
 		{
-			parser: fakeParser{fakearg: "flag2"},
-			want:   fakeCommand{flagName: "flag2"},
+			args: []string{"flag2"},
+			want: fakeCommand{flagName: "flag2"},
 		},
 	}
 
 	for _, item := range cases {
-		args := []string{item.parser.fakearg}
-		parsedArg, _ := item.parser.Parse(args)
+		parser := fakeParser{}
+        cmdfactory.Setup(fakeAvailableCommands, parser)
 
-		cmdfactory.Setup(fakeAvailableCommands)
-		got, _ := cmdfactory.Create(*parsedArg)
+		got, _ := cmdfactory.Create(item.args)
 
 		want := item.want
 
@@ -40,35 +39,33 @@ func TestCreate(t *testing.T) {
 }
 
 func TestNonExistentCommand(t *testing.T) {
-    cases := []struct{
-        parser fakeParser
-        want error
-    }{
-        {
-            parser: fakeParser{fakearg: "nonexistent"},
-            want: domain.NonExistentCommandError{
-                Argument: *getFakeArgument("nonexistent"),
-            },
-        },
-        {
-            parser: fakeParser{fakearg: "flag1"},
-            want: nil,
-        },
-    }
+	cases := []struct {
+        args []string
+		want   error
+	}{
+		{
+            args: []string{"nonexistent"},
+			want: domain.NonExistentCommandError{
+				Argument: *getFakeArgument("nonexistent"),
+			},
+		},
+		{
+            args: []string{"flag1"},
+			want:   nil,
+		},
+	}
 
-    for _, item := range cases{
-        args := []string{item.parser.fakearg}
-        parsedArg, _ := item.parser.Parse(args)
+	for _, item := range cases {
+		parser := fakeParser{}
+        cmdfactory.Setup(fakeAvailableCommands, parser)
 
-        cmdfactory.Setup(fakeAvailableCommands)
-        _, got := cmdfactory.Create(*parsedArg)
+		_, got := cmdfactory.Create(item.args)
 
-        want := item.want
+		want := item.want
 
-        if !errors.Is(got, want){
-            t.Errorf("error in TestNonExistentCommand\ngot\n%v\nwant\n%v", got, want)
-        }
-    }
+		if !errors.Is(got, want) {
+			t.Errorf("error in TestNonExistentCommand\ngot\n%v\nwant\n%v", got, want)
+		}
+	}
 
 }
-

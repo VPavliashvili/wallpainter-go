@@ -1,17 +1,22 @@
 package cmdfactory
 
 import (
+	"github.com/VPavliashvili/slideshow-go/args"
 	"github.com/VPavliashvili/slideshow-go/domain"
 )
 
 var availableCommands domain.AvailableCommandsProvider
+var argsparser args.Parser
 
-func Setup(provider domain.AvailableCommandsProvider) {
-	availableCommands = provider
+func Setup(commandsprovider domain.AvailableCommandsProvider,
+	parser args.Parser) {
+	availableCommands = commandsprovider
+	argsparser = parser
 }
 
-func Create(arg domain.Argument) (domain.Command, error) {
+func Create(args []string) (domain.Command, error) {
 	cmds := availableCommands.Get()
+	arg, _ := argsparser.Parse(args)
 
 	for _, cmd := range cmds {
 		if cmd.GetArgument().FlagName == arg.FlagName {
@@ -19,5 +24,5 @@ func Create(arg domain.Argument) (domain.Command, error) {
 		}
 	}
 
-	return nil, domain.NonExistentCommandError{Argument: arg}
+	return nil, domain.NonExistentCommandError{Argument: *arg}
 }

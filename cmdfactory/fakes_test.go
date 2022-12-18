@@ -14,10 +14,10 @@ func getFakeArgument(flag string) *domain.Argument {
 	}
 }
 
-type fakeParser struct{ fakearg string }
+type fakeParser struct{}
 
 func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
-	result := getFakeArgument(f.fakearg)
+	result := getFakeArgument(args[0])
 	return result, nil
 }
 
