@@ -1,12 +1,10 @@
-package newfactory_test
+package cmdfactory_test
 
 import "github.com/VPavliashvili/slideshow-go/domain"
 
-type fakeParser struct{ fakearg string }
-
-func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
-	result := &domain.Argument{
-		FlagName: domain.Flag(f.fakearg),
+func getFakeArgument(flag string) *domain.Argument {
+	return &domain.Argument{
+		FlagName: domain.Flag(flag),
 		Opts: []domain.Opt{
 			{
 				Name:  "fakeopt",
@@ -14,6 +12,12 @@ func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
 			},
 		},
 	}
+}
+
+type fakeParser struct{ fakearg string }
+
+func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
+	result := getFakeArgument(f.fakearg)
 	return result, nil
 }
 
@@ -45,7 +49,7 @@ func (f fakeProvider) Get() []domain.Command {
 	return f.fakeCmds
 }
 
-var provider fakeProvider = fakeProvider{
+var fakeAvailableCommands fakeProvider = fakeProvider{
 	fakeCmds: []domain.Command{
 		fakeCommand{
 			flagName: "flag1",
