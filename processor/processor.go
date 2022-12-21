@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/VPavliashvili/slideshow-go/cmds"
+	"github.com/VPavliashvili/wallpainter-go/cmds"
 )
 
 func getArgs(raw []string) []string {

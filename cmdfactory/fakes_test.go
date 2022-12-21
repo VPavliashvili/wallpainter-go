@@ -1,6 +1,6 @@
 package cmdfactory_test
 
-import "github.com/VPavliashvili/slideshow-go/domain"
+import "github.com/VPavliashvili/wallpainter-go/domain"
 
 func getFakeArgument(flag string, opts []domain.Opt) *domain.Argument {
 	return &domain.Argument{

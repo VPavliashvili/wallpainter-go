@@ -3,10 +3,10 @@ package cmds
 import (
 	"fmt"
 
-	"github.com/VPavliashvili/slideshow-go/args"
-	"github.com/VPavliashvili/slideshow-go/cmdfactory"
-	"github.com/VPavliashvili/slideshow-go/cmds/help"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/args"
+	"github.com/VPavliashvili/wallpainter-go/cmdfactory"
+	"github.com/VPavliashvili/wallpainter-go/cmds/help"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 type availableCommands struct{}

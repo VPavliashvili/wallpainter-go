@@ -1,8 +1,8 @@
 package cmdfactory
 
 import (
-	"github.com/VPavliashvili/slideshow-go/args/parser"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/args/parser"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func Create(commandsprovider domain.AvailableCommandsProvider, parser parser.Parser) CommandFactory {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func Create() HelpBuilder{

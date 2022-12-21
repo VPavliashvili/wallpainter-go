@@ -3,8 +3,8 @@ package help_test
 import (
 	"testing"
 
-	"github.com/VPavliashvili/slideshow-go/cmds/help"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/cmds/help"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func TestArgumentName(t *testing.T) {

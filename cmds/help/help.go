@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VPavliashvili/slideshow-go/args"
-	"github.com/VPavliashvili/slideshow-go/cmds/help/builder"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/args"
+	"github.com/VPavliashvili/wallpainter-go/cmds/help/builder"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func Create() domain.Command {

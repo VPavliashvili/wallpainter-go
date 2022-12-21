@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/VPavliashvili/slideshow-go/iohandler"
+	"github.com/VPavliashvili/wallpainter-go/iohandler"
 )
 
 type io struct{}

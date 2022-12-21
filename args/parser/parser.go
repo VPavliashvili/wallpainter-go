@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 	"golang.org/x/exp/slices"
 )
 

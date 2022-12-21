@@ -3,8 +3,8 @@ package parser_test
 import (
 	"testing"
 
-	"github.com/VPavliashvili/slideshow-go/args/parser"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/args/parser"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {

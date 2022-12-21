@@ -1,6 +1,6 @@
 package main
 
-import "github.com/VPavliashvili/slideshow-go/processor"
+import "github.com/VPavliashvili/wallpainter-go/processor"
 
 func main() {
 

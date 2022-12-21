@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/VPavliashvili/slideshow-go/cmdfactory"
-	"github.com/VPavliashvili/slideshow-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/cmdfactory"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
 func TestCreate(t *testing.T) {
