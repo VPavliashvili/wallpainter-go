@@ -67,6 +67,10 @@ func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
 			args:    []string{flag2, "idk"},
 			isError: true,
 		},
+        {
+            args: []string{},
+            isError: true,
+        },
 	}
 
 	for _, item := range cases {

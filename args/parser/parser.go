@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"errors"
+
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"golang.org/x/exp/slices"
 )
@@ -20,6 +22,10 @@ type concreteParser struct {
 }
 
 func (b concreteParser) Parse(args []string) (*domain.Argument, error) {
+    if len(args) == 0 {
+        return nil, errors.New("args array should not be empty")
+    }
+
 	cmdsData := b.allCommandsData.Get()
 	flag := args[0]
 	optArgs := args[1:]

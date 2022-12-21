@@ -52,6 +52,16 @@ func TestCreate(t *testing.T) {
 	}
 }
 
+func TestEmptySlicesOrArray(t *testing.T) {
+    parser := fakeParser{}
+    factory := cmdfactory.Create(fakeAvailableCommands, parser)
+
+    _, err := factory.CreateCommand([]string{})
+    if err == nil {
+        t.Errorf("should have thrown an error")
+    }
+}
+
 func TestNonExistentCommand(t *testing.T) {
 	cases := []struct {
 		args []string

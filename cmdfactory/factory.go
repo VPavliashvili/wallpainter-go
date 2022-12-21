@@ -1,6 +1,8 @@
 package cmdfactory
 
 import (
+	"errors"
+
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/domain"
 )
@@ -22,6 +24,10 @@ type factory struct {
 }
 
 func (cf factory) CreateCommand(args []string) (domain.Command, error) {
+    if len(args) == 0 {
+        return nil, errors.New("args should not have been empty")
+    }
+
 	cmds := cf.availableCommands.Get()
 	arg, _ := cf.argsParser.Parse(args)
 
