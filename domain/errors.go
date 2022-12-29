@@ -13,7 +13,7 @@ func (err NonExistentCommandError) Error() string {
 func (err NonExistentCommandError) Is(target error) bool {
 	switch target := target.(type) {
 	case NonExistentCommandError:
-		return err.Argument.FlagName == target.Argument.FlagName
+		return err.Argument.Flag == target.Argument.Flag
 	default:
 		panic("only NonExistentCommandError error is expected")
 	}

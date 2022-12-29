@@ -33,6 +33,6 @@ func getDescriptionInfo(desc string) string {
 }
 
 func (b concreteBuilder) GetHelp(arg domain.Argument) string {
-	result := fmt.Sprintf("%v\n%v%v\n", getNameInfo(string(arg.FlagName)), HelpInfoTabSize, getDescriptionInfo(arg.Description))
+	result := fmt.Sprintf("%v\n%v%v\n", getNameInfo(arg.Flag.String()), HelpInfoTabSize, getDescriptionInfo(arg.Description))
 	return result
 }

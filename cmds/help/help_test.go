@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"github.com/VPavliashvili/wallpainter-go/cmds/help"
-	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 func TestArgumentName(t *testing.T) {
 	help := help.Create()
 
-	want := "--help"
+	want := flags.Help
 	got := help.Name()
 
 	if got != want {
@@ -18,17 +18,12 @@ func TestArgumentName(t *testing.T) {
 	}
 }
 
-var fakeArgument domain.Argument = domain.Argument{
-	FlagName: "--fake",
-	Opts:     []domain.Opt{},
-}
+//func TestSetArgument(t *testing.T) {
+    //help := help.Create()
 
-func TestSetArgument(t *testing.T) {
-    help := help.Create()
+    //help.SetArgument(fakeArgument)
 
-    help.SetArgument(fakeArgument)
-
-    if !help.GetArgument().Equals(fakeArgument) {
-        t.Errorf("SetArgument error\ngot\n%v\nwant\n%v", help.GetArgument(), fakeArgument)
-    }
-}
+    //if !help.GetArgument().Equals(fakeArgument) {
+        //t.Errorf("SetArgument error\ngot\n%v\nwant\n%v", help.GetArgument(), fakeArgument)
+    //}
+//}

@@ -29,10 +29,14 @@ func (cf factory) CreateCommand(args []string) (domain.Command, error) {
     }
 
 	cmds := cf.availableCommands.Get()
-	arg, _ := cf.argsParser.Parse(args)
+	arg, err := cf.argsParser.Parse(args)
+
+    if err != nil {
+        return nil, err
+    }
 
 	for _, cmd := range cmds {
-		if cmd.Name() == string(arg.FlagName) {
+		if cmd.Name() == arg.Flag.String() {
             cmd.SetArgument(*arg)
 			return cmd, nil
 		}

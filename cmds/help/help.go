@@ -7,21 +7,15 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/args"
 	"github.com/VPavliashvili/wallpainter-go/cmds/help/builder"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 func Create() domain.Command {
 	allargs := args.GetAll()
-
-	var arg domain.Argument
-	for _, item := range allargs {
-		if item.FlagName == "--help" {
-			arg = item
-			break
-		}
-	}
+	//arg := args.GetByName(flag)
 
 	return &help{
-		argument:   arg,
+		//argument:   arg,
 		predefined: allargs,
 	}
 }
@@ -31,12 +25,8 @@ type help struct {
 	predefined []domain.Argument
 }
 
-func (h help) GetArgument() domain.Argument {
-	return h.argument
-}
-
 func (h help) Name() string {
-	return "--help"
+	return flags.Help
 }
 
 func (h *help) SetArgument(a domain.Argument) {
@@ -51,7 +41,7 @@ func (h help) Execute() error {
 		sb.WriteString(builder.GetHelp(arg))
 	}
 
-    result := sb.String()
+	result := sb.String()
 	fmt.Print(result)
 
 	return nil

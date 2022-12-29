@@ -5,6 +5,7 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
@@ -100,7 +101,7 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		{
 			args: []string{flag1, opt11, optval11, opt12},
 			want: &domain.Argument{
-				FlagName: flag1,
+				Flag: flags.ToFlag(flag1),
 				Opts: []domain.Opt{
 					{
 						Name:  opt11,
@@ -115,7 +116,7 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		{
 			args: []string{flag1, opt12},
 			want: &domain.Argument{
-				FlagName: flag1,
+				Flag: flags.ToFlag(flag1),
 				Opts: []domain.Opt{
 					{
 						Name: opt12,
@@ -126,14 +127,14 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		{
 			args: []string{flag2},
 			want: &domain.Argument{
-				FlagName: flag2,
+				Flag: flags.ToFlag(flag2),
 				Opts:     []domain.Opt{},
 			},
 		},
 		{
 			args: []string{flag1, opt11, opt12},
 			want: &domain.Argument{
-				FlagName: flag1,
+				Flag: flags.ToFlag(flag1),
 				Opts: []domain.Opt{
 					{
 						Name: opt11,
@@ -147,7 +148,7 @@ func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
 		{
 			args: []string{flag1, opt12, opt11, optval11},
 			want: &domain.Argument{
-				FlagName: flag1,
+				Flag: flags.ToFlag(flag1),
 				Opts: []domain.Opt{
 					{
 						Name: opt12,

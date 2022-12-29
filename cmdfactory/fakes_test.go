@@ -1,11 +1,14 @@
 package cmdfactory_test
 
-import "github.com/VPavliashvili/wallpainter-go/domain"
+import (
+	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+)
 
 func getFakeArgument(flag string, opts []domain.Opt) *domain.Argument {
 	return &domain.Argument{
-		FlagName: domain.Flag(flag),
-		Opts:     opts,
+		Flag: flags.ToFlag(flag),
+		Opts: opts,
 	}
 }
 
@@ -26,7 +29,7 @@ func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
 		}}
 	case "flag1":
 		result.Opts = []domain.Opt{{
-			Name: "d",
+			Name:  "d",
 			Value: "k",
 		}}
 	}
@@ -40,17 +43,10 @@ type fakeCommand struct {
 
 func (f fakeCommand) Execute() error { return nil }
 
-func (f fakeCommand) GetArgument() domain.Argument {
-	return domain.Argument{
-		FlagName: domain.Flag(f.flagName),
-		Opts:     f.opts,
-	}
-}
-
 func (f fakeCommand) Name() string { return f.flagName }
 
 func (f *fakeCommand) SetArgument(arg domain.Argument) {
-	f.flagName = string(arg.FlagName)
+	f.flagName = arg.Flag.String()
 	f.opts = arg.Opts
 }
 

@@ -16,16 +16,17 @@ func (i io) Exist(file string) bool {
 }
 
 func (i io) IsPicture(file string) bool {
-    return iohandler.IsPicture(file)
+	return iohandler.IsPicture(file)
 }
 
-func (i io) SetWallpaper(file string) error {
-    args := []string{"--bg-scale", file}
-    arr, err := exec.Command("feh", args...).Output()
-    if err != nil {
-        return err
-    }
-    fmt.Println(string(arr[:]))
-    return nil
+func (i io) SetWallpaper(file string, scaling string) error {
+	scaling = fmt.Sprintf("--bg-%v", scaling)
+	args := []string{"--no-fehbg", scaling, file}
+    fmt.Println(args)
+	arr, err := exec.Command("feh", args...).Output()
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(arr[:]))
+	return nil
 }
-

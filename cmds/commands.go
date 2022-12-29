@@ -6,7 +6,9 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/args"
 	"github.com/VPavliashvili/wallpainter-go/cmdfactory"
 	"github.com/VPavliashvili/wallpainter-go/cmds/help"
+	setwallpaper "github.com/VPavliashvili/wallpainter-go/cmds/setWallpaper"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 type availableCommands struct{}
@@ -32,18 +34,19 @@ func Create(input []string) (domain.Command, error) {
 
 var available = []domain.Command{
 	help.Create(),
+    setwallpaper.Create(),
 }
 
 func validateInput(input []string) error {
-    if len(input)==0{
-        return fmt.Errorf("arguments are empty, please specify command\nor see --help for help")
-    }
+	if len(input) == 0 {
+		return fmt.Errorf("arguments are empty, please specify command\nor see --help for help")
+	}
 
 	args := args.GetAll()
 	name := input[0]
 
 	for _, item := range args {
-		if item.FlagName == domain.Flag(name) {
+		if item.Flag == flags.ToFlag(name) {
 			return nil
 		}
 	}

@@ -1,8 +1,11 @@
 package args
 
 import (
+	"fmt"
+
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 type argumentsProvider struct{}
@@ -17,12 +20,17 @@ func GetParser() parser.Parser {
 
 var availableArgs = []domain.Argument{
 	{
-		FlagName: "--help",
-		Opts:     []domain.Opt{},
-        Description: "Prints this menu",
+		Flag:        flags.Help,
+		Opts:        []domain.Opt{},
+		Description: "Prints this menu",
+	},
+	{
+		Flag:        flags.SetWallpaper,
+		Opts:        []domain.Opt{},
+		Description: fmt.Sprintf("Sets new wallpaper\n      usage: %v /some/path/img.jpg", flags.SetWallpaper),
 	},
 }
 
-func GetAll() []domain.Argument{
-    return availableArgs
+func GetAll() []domain.Argument {
+	return availableArgs
 }

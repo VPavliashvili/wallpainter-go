@@ -1,6 +1,9 @@
 package parser_test
 
-import "github.com/VPavliashvili/wallpainter-go/domain"
+import (
+	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+)
 
 const (
 	flag1    = "flag1"
@@ -15,7 +18,7 @@ type fakeCmdData struct{}
 func (f fakeCmdData) Get() []domain.Argument{
 	return []domain.Argument{
 		{
-			FlagName: flag1,
+			Flag: flags.ToFlag(flag1),
 			Opts: []domain.Opt{
 				{
 					Name: opt11,
@@ -28,7 +31,7 @@ func (f fakeCmdData) Get() []domain.Argument{
 			},
 		},
 		{
-			FlagName: flag2,
+			Flag: flags.ToFlag(flag2),
 			Opts:     []domain.Opt{},
 		},
 	}
