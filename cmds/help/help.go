@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VPavliashvili/wallpainter-go/cmds/help/builder"
+	b "github.com/VPavliashvili/wallpainter-go/cmds/help/builder"
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
+
+var setwprpdesc = fmt.Sprintf(`Sets new wallpaper
+      usage: %v /some/path/img.jpg
+      options: --scaling {max, fill, center, tile, scale}
+      scale is default`, flags.SetWallpaper)
 
 var availableArgs = []domain.CmdArgument{
 	{
@@ -16,7 +21,7 @@ var availableArgs = []domain.CmdArgument{
 	},
 	{
 		Flag:        flags.SetWallpaper,
-		Description: fmt.Sprintf("Sets new wallpaper\n      usage: %v /some/path/img.jpg", flags.SetWallpaper),
+		Description: setwprpdesc,
 	},
 }
 
@@ -37,7 +42,7 @@ func (h help) Name() string {
 func (h *help) SetArgument(a domain.CmdArgument) {}
 
 func (h help) Execute() error {
-	builder := builder.Create()
+	builder := b.Create()
 	var sb strings.Builder
 
 	for _, arg := range h.predefined {

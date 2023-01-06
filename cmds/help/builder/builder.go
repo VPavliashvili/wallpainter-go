@@ -11,7 +11,7 @@ func Create() HelpBuilder{
     return concreteBuilder{}
 }
 
-const HelpInfoTabSize = "      "
+const Tab = "      "
 
 type HelpBuilder interface {
 	GetHelp(domain.CmdArgument) string
@@ -34,6 +34,6 @@ func getDescriptionInfo(desc string) string {
 
 func (b concreteBuilder) GetHelp(arg domain.CmdArgument) string {
     flag := string(arg.Flag)
-	result := fmt.Sprintf("%v\n%v%v\n", getNameInfo(flag), HelpInfoTabSize, getDescriptionInfo(arg.Description))
+	result := fmt.Sprintf("%v\n%v%v\n", getNameInfo(flag), Tab, getDescriptionInfo(arg.Description))
 	return result
 }
