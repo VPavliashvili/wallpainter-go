@@ -36,7 +36,7 @@ func (setWallpaper) Name() string {
 	return flags.SetWallpaper
 }
 
-func (s *setWallpaper) SetArgument(arg domain.Argument) {
+func (s *setWallpaper) SetArgument(arg domain.CmdArgument) {
 	for _, opt := range arg.Opts {
 		if opt.Name == "--scaling" {
             s.scaling = opt.Value

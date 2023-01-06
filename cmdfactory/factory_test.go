@@ -7,6 +7,7 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/cmdfactory"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
 func TestCreate(t *testing.T) {
@@ -18,7 +19,7 @@ func TestCreate(t *testing.T) {
 			args: []string{"flag1"},
 			want: fakeCommand{
 				flagName: "flag1",
-				opts:     []domain.Opt{{
+				opts:     []opts.Opt{{
 					Name:  "d",
 					Value: "k",
 				}},
@@ -28,7 +29,7 @@ func TestCreate(t *testing.T) {
 			args: []string{"flag2"},
 			want: fakeCommand{
 				flagName: "flag2",
-				opts:     []domain.Opt{
+				opts:     []opts.Opt{
                     {
                     	Name:  "opt1",
                     	Value: "val1",
@@ -70,7 +71,7 @@ func TestNonExistentCommand(t *testing.T) {
 		{
 			args: []string{"nonexistent"},
 			want: domain.NonExistentCommandError{
-				Argument: *getFakeArgument("nonexistent", []domain.Opt{}),
+				Argument: *getFakeArgument("nonexistent", []opts.Opt{}),
 			},
 		},
 		{

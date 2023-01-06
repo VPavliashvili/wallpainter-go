@@ -4,32 +4,29 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VPavliashvili/wallpainter-go/args"
 	"github.com/VPavliashvili/wallpainter-go/cmds/help/builder"
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 func Create() domain.Command {
-	allargs := args.GetAll()
-	//arg := args.GetByName(flag)
+	allargs := domain.GetAllCmdArguments()
 
 	return &help{
-		//argument:   arg,
 		predefined: allargs,
 	}
 }
 
 type help struct {
-	argument   domain.Argument
-	predefined []domain.Argument
+	argument   domain.CmdArgument
+	predefined []domain.CmdArgument
 }
 
 func (h help) Name() string {
 	return flags.Help
 }
 
-func (h *help) SetArgument(a domain.Argument) {
+func (h *help) SetArgument(a domain.CmdArgument) {
 	h.argument = a
 }
 

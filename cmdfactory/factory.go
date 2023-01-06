@@ -24,20 +24,20 @@ type factory struct {
 }
 
 func (cf factory) CreateCommand(args []string) (domain.Command, error) {
-    if len(args) == 0 {
-        return nil, errors.New("args should not have been empty")
-    }
+	if len(args) == 0 {
+		return nil, errors.New("args should not have been empty")
+	}
 
 	cmds := cf.availableCommands.Get()
 	arg, err := cf.argsParser.Parse(args)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
 	for _, cmd := range cmds {
-		if cmd.Name() == arg.Flag.String() {
-            cmd.SetArgument(*arg)
+		if cmd.Name() == string(arg.Flag) {
+			cmd.SetArgument(*arg)
 			return cmd, nil
 		}
 	}

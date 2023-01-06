@@ -3,10 +3,11 @@ package cmdfactory_test
 import (
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-func getFakeArgument(flag string, opts []domain.Opt) *domain.Argument {
-	return &domain.Argument{
+func getFakeArgument(flag string, opts []opts.Opt) *domain.CmdArgument {
+	return &domain.CmdArgument{
 		Flag: flags.ToFlag(flag),
 		Opts: opts,
 	}
@@ -14,21 +15,21 @@ func getFakeArgument(flag string, opts []domain.Opt) *domain.Argument {
 
 type fakeParser struct{}
 
-func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
-	result := getFakeArgument(args[0], []domain.Opt{})
+func (f fakeParser) Parse(args []string) (*domain.CmdArgument, error) {
+	result := getFakeArgument(args[0], []opts.Opt{})
 	switch args[0] {
 	case "flag3":
-		result.Opts = []domain.Opt{{
+		result.Opts = []opts.Opt{{
 			Name:  "o2",
 			Value: "v2",
 		}}
 	case "flag2":
-		result.Opts = []domain.Opt{{
+		result.Opts = []opts.Opt{{
 			Name:  "opt1",
 			Value: "val1",
 		}}
 	case "flag1":
-		result.Opts = []domain.Opt{{
+		result.Opts = []opts.Opt{{
 			Name:  "d",
 			Value: "k",
 		}}
@@ -38,15 +39,15 @@ func (f fakeParser) Parse(args []string) (*domain.Argument, error) {
 
 type fakeCommand struct {
 	flagName string
-	opts     []domain.Opt
+	opts     []opts.Opt
 }
 
 func (f fakeCommand) Execute() error { return nil }
 
 func (f fakeCommand) Name() string { return f.flagName }
 
-func (f *fakeCommand) SetArgument(arg domain.Argument) {
-	f.flagName = arg.Flag.String()
+func (f *fakeCommand) SetArgument(arg domain.CmdArgument) {
+	f.flagName = string(arg.Flag)
 	f.opts = arg.Opts
 }
 
@@ -65,7 +66,7 @@ var fakeAvailableCommands fakeProvider = fakeProvider{
 		},
 		&fakeCommand{
 			flagName: "flag2",
-			opts: []domain.Opt{
+			opts: []opts.Opt{
 				{
 					Name:  "opt1",
 					Value: "val1",

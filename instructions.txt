@@ -36,3 +36,7 @@ Flag -> Option
 one flag can have 0 or more options
 first argument should always be Flag and then
 it's options are expected
+
+wallpaint erqmeva binarys, da brdzanebac igive saxelit gaeshveba
+
+tito flags tavisi optebis parsing logic eqneba

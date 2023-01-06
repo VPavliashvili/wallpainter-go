@@ -5,24 +5,25 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 	"golang.org/x/exp/slices"
 )
 
-func Create(data domain.AvailableArgumentsProvider) Parser {
+func Create(data domain.RawArgsProvider) Parser {
 	return concreteParser{
 		allArgumentsData: data,
 	}
 }
 
 type Parser interface {
-	Parse([]string) (*domain.Argument, error)
+	Parse([]string) (*domain.CmdArgument, error)
 }
 
 type concreteParser struct {
-	allArgumentsData domain.AvailableArgumentsProvider
+	allArgumentsData domain.RawArgsProvider
 }
 
-func (b concreteParser) Parse(args []string) (*domain.Argument, error) {
+func (b concreteParser) Parse(args []string) (*domain.CmdArgument, error) {
 	if len(args) == 0 {
 		return nil, errors.New("args array should not be empty")
 	}
@@ -31,114 +32,70 @@ func (b concreteParser) Parse(args []string) (*domain.Argument, error) {
 	flag := args[0]
 	optArgs := args[1:]
 
-	if flag == flags.SetWallpaper {
-		return &domain.Argument{
-			Flag: flags.ToFlag(flag),
-			Opts: getSetWallpaperCommandOpts(optArgs),
-		}, nil
+	err := VerifyOnlyOneFlagAtTheFirstIndex(flag, optArgs, argsData)
+	if err != nil {
+		return nil, err
 	}
 
-	if !hasOnlyOneFlagArgumentAtStartingPosition(flag, args, argsData) ||
-		!checkAllEnteredFlagOptionArgumentsAreValid(flag, optArgs, argsData) {
-		return nil, invalidInputError{input: args}
+	optsparser, err := getOptsParser(flag, argsData)
+	if err != nil {
+		return nil, err
 	}
 
-	result := getCmddata(flag, optArgs)
-	return &result, nil
+	opts, err := optsparser.Parse(optArgs)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &domain.CmdArgument{
+		Flag:        flags.Flag(flag),
+		Opts:        opts,
+		Description: "",
+	}
+	return result, nil
 }
 
-func getSetWallpaperCommandOpts(optArgs []string) []domain.Opt {
-	var result []domain.Opt
-	var usedIndexes []int
-	for i := 0; i < len(optArgs); i++ {
-		arg := optArgs[i]
-		if domain.IsOptName(arg) {
-			next := domain.Opt{Name: arg, Value: optArgs[i+1]}
-			usedIndexes = append(usedIndexes, i+1)
-			result = append(result, next)
-		} else {
-			if !slices.Contains(usedIndexes, i) {
-				next := domain.Opt{Name: "", Value: arg}
-				result = append(result, next)
+func VerifyOnlyOneFlagAtTheFirstIndex(flag string, opts []string, argsData []domain.RawArgument) error {
+	var allflags []string
+	for _, item := range argsData {
+		allflags = append(allflags, item.Flag)
+	}
+
+	if !slices.Contains(allflags, flag) {
+		return domain.NonExistentCommandError{
+			Flag: flags.Flag(flag),
+		}
+	}
+
+	for _, opt := range opts {
+		if slices.Contains(allflags, opt) {
+			a := []string{flag}
+			a = append(a, opts...)
+
+			return domain.MoreThanOneFlagError{
+				Args: a,
 			}
 		}
 	}
 
-	return result
+	return nil
 }
 
-func getCmddata(flag string, optArgs []string) domain.Argument {
-	var result domain.Argument
-	result.Flag = flags.ToFlag(flag)
-	pairs := make(map[string]string)
-
-	for i := 0; i < len(optArgs); i++ {
-		arg := optArgs[i]
-		if i < len(optArgs)-1 {
-			next := optArgs[i+1]
-			if !domain.IsOptName(next) {
-				i++
-				pairs[arg] = next
-			} else {
-				pairs[arg] = ""
-			}
-		} else {
-			pairs[arg] = ""
-		}
-	}
-
-	for opt, val := range pairs {
-		result.Opts = append(result.Opts, domain.Opt{
-			Name:  opt,
-			Value: val,
-		})
-	}
-
-	return result
-}
-
-func checkAllEnteredFlagOptionArgumentsAreValid(flag string, optArgs []string, cmdsData []domain.Argument) bool {
-	if len(optArgs) > 0 && !domain.IsOptName(optArgs[0]) {
-		return false
-	}
-
-	var optNames []string
-	for _, cmdData := range cmdsData {
-		if cmdData.Flag == flags.ToFlag(flag) {
-			for _, opt := range cmdData.Opts {
-				optNames = append(optNames, opt.Name)
-			}
+func getOptsParser(flag string, argsData []domain.RawArgument) (opts.OptParser, error) {
+	var optsparser opts.OptParser
+	hasfound := false
+	for _, item := range argsData {
+		if item.Flag == flag {
+			optsparser = item.OptsParser
+			hasfound = true
 			break
 		}
 	}
-
-	if len(optArgs) > 0 {
-		for _, optArg := range optArgs {
-			if domain.IsOptName(optArg) && !slices.Contains(optNames, optArg) {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func hasOnlyOneFlagArgumentAtStartingPosition(flag string, args []string, allCmdData []domain.Argument) bool {
-	var validFlags []flags.Flag
-
-	for _, item := range allCmdData {
-		validFlags = append(validFlags, item.Flag)
-	}
-
-	if !slices.Contains(validFlags, flags.ToFlag(flag)) {
-		return false
-	}
-
-	for i := 1; i < len(args); i++ {
-		arg := flags.ToFlag(args[i])
-		if slices.Contains(validFlags, arg) {
-			return false
+	if !hasfound {
+		return nil, domain.NonExistentCommandError{
+			Flag: flags.Flag(flag),
 		}
 	}
 
-	return true
+	return optsparser, nil
 }

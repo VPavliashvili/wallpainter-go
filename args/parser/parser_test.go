@@ -1,181 +1,74 @@
 package parser_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/domain"
-	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-func TestShouldReturnErrorWhenIncompatibleOrInvalidInput(t *testing.T) {
-	commandsData := fakeCmdData{}
-	parser := parser.Create(commandsData)
-
+func TestShouldSeparateFlagAndOptsCorrectly(t *testing.T) {
 	cases := []struct {
-		args    []string
-		isError bool
+		args []string
+		want domain.CmdArgument
 	}{
 		{
-			args:    []string{flag1},
-			isError: false,
+			args: []string{flag1, opt11, optval11},
+			want: domain.CmdArgument{
+				Flag:        flag1,
+				Opts:        []opts.Opt{{Name: opt11, Value: optval11}},
+				Description: "",
+			},
 		},
-		{
-			args:    []string{"notFlag"},
-			isError: true,
-		},
-		{
-			args:    []string{flag1, flag2},
-			isError: true,
-		},
-		{
-			args:    []string{"idk", "idk"},
-			isError: true,
-		},
-		{
-			args:    []string{flag1, opt11, optval11, opt12},
-			isError: false,
-		},
-		{
-			args:    []string{flag1, opt11, optval11, opt12, "--idk"},
-			isError: true,
-		},
-		{
-			args:    []string{flag1, opt11, "", opt12},
-			isError: false,
-		},
-		{
-			args:    []string{flag1, opt11},
-			isError: false,
-		},
-		{
-			args:    []string{flag1, opt11, opt12},
-			isError: false,
-		},
-		{
-			args:    []string{flag2},
-			isError: false,
-		},
-		{
-			args:    []string{flag1, optval11}, // only optValue without actual opt is error
-			isError: true,
-		},
-		{
-			args:    []string{flag1, "--idk"}, //incompatible opt for flag is error
-			isError: true,
-		},
-		{
-			args:    []string{flag2, "idk"},
-			isError: true,
-		},
-        {
-            args: []string{},
-            isError: true,
-        },
 	}
 
+	parser := parser.Create(fakeCmdData{})
 	for _, item := range cases {
-		_, got := parser.Parse(item.args)
-		isErr := item.isError
+		got, err := parser.Parse(item.args)
+		want := item.want
 
-		if got != nil != isErr {
-			var msg string
-			if isErr {
-				msg = "Should have returned an error"
-			} else {
-				msg = "Args are valid, shouln't have returned an error"
-			}
-			t.Errorf("%v\ngot\n%v\ncase\n%v", msg, got, item.args)
+		if err != nil {
+			t.Errorf("error should have been nil, got\n%v", err)
+		}
+
+		if !got.Equals(&want) {
+			t.Errorf("error in args parser\ngot\n%v\nwant\n%v", got, want)
 		}
 	}
 }
 
-func TestShouldReturnOsArgsAsCmdData(t *testing.T) {
-	commandsData := fakeCmdData{}
-	parser := parser.Create(commandsData)
-
+func TestWhenErrorShouldThrow(t *testing.T) {
 	cases := []struct {
 		args []string
-		want *domain.Argument
+		err  error
 	}{
 		{
-			args: []string{flag1, opt11, optval11, opt12},
-			want: &domain.Argument{
-				Flag: flags.ToFlag(flag1),
-				Opts: []domain.Opt{
-					{
-						Name:  opt11,
-						Value: optval11,
-					},
-					{
-						Name: opt12,
-					},
-				},
+			args: []string{"nonexietentflag"},
+			err: domain.NonExistentCommandError{
+				Flag: "nonexietentflag",
 			},
 		},
 		{
-			args: []string{flag1, opt12},
-			want: &domain.Argument{
-				Flag: flags.ToFlag(flag1),
-				Opts: []domain.Opt{
-					{
-						Name: opt12,
-					},
-				},
+			args: []string{flag1, opt11, flag2},
+			err: domain.MoreThanOneFlagError{
+				Args: []string{flag1, opt11, flag2},
 			},
-		},
-		{
-			args: []string{flag2},
-			want: &domain.Argument{
-				Flag: flags.ToFlag(flag2),
-				Opts:     []domain.Opt{},
-			},
-		},
-		{
-			args: []string{flag1, opt11, opt12},
-			want: &domain.Argument{
-				Flag: flags.ToFlag(flag1),
-				Opts: []domain.Opt{
-					{
-						Name: opt11,
-					},
-					{
-						Name: opt12,
-					},
-				},
-			},
-		},
-		{
-			args: []string{flag1, opt12, opt11, optval11},
-			want: &domain.Argument{
-				Flag: flags.ToFlag(flag1),
-				Opts: []domain.Opt{
-					{
-						Name: opt12,
-					},
-					{
-						Name:  opt11,
-						Value: optval11,
-					},
-				},
-			},
-		},
-		{
-			args: []string{"--invalid"},
-			want: nil,
 		},
 	}
 
+	parser := parser.Create(fakeCmdData{})
 	for _, item := range cases {
-		got, _ := parser.Parse(item.args)
-		want := item.want
+		res, err := parser.Parse(item.args)
+		want := item.err
 
-		if want == nil {
-			if got != nil {
-				t.Errorf("Error in Build()\ngot\n%v\nwant\nnill\ncase\n%v", got, item.args)
-			}
-		} else if !got.Equals(*want) {
-			t.Errorf("Error in Build()\ngot\n%v\nwant\n%v\ncase\n%v", got, want, item.args)
+		if res != nil {
+			t.Errorf("result should have been nil, got -> %v", res)
+		}
+
+		if !errors.Is(err, want) {
+			t.Errorf("proper error has not thrown\ngot\n%v\nwant\n%v", err, want)
 		}
 	}
 }

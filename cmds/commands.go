@@ -42,7 +42,7 @@ func validateInput(input []string) error {
 		return fmt.Errorf("arguments are empty, please specify command\nor see --help for help")
 	}
 
-	args := args.GetAll()
+	args := domain.GetAllCmdArguments()
 	name := input[0]
 
 	for _, item := range args {

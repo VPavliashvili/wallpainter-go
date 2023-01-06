@@ -1,36 +1,30 @@
 package args
 
 import (
-	"fmt"
-
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
+	"github.com/VPavliashvili/wallpainter-go/args/parser/helpopts"
+	setwallpaperopts "github.com/VPavliashvili/wallpainter-go/args/parser/setWallpaperopts"
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
-type argumentsProvider struct{}
-
-func (ap argumentsProvider) Get() []domain.Argument {
-	return availableArgs
-}
-
 func GetParser() parser.Parser {
-	return parser.Create(argumentsProvider{})
+	return parser.Create(provider{})
 }
 
-var availableArgs = []domain.Argument{
-	{
-		Flag:        flags.Help,
-		Opts:        []domain.Opt{},
-		Description: "Prints this menu",
-	},
-	{
-		Flag:        flags.SetWallpaper,
-		Opts:        []domain.Opt{},
-		Description: fmt.Sprintf("Sets new wallpaper\n      usage: %v /some/path/img.jpg", flags.SetWallpaper),
-	},
+type provider struct{}
+
+func (p provider) Get() []domain.RawArgument {
+	return rawavailable
 }
 
-func GetAll() []domain.Argument {
-	return availableArgs
+var rawavailable = []domain.RawArgument{
+	{
+		Flag:       flags.Help,
+		OptsParser: helpopts.Create(),
+	},
+	{
+		Flag:       flags.SetWallpaper,
+		OptsParser: setwallpaperopts.Create(),
+	},
 }
