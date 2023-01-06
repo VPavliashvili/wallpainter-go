@@ -25,7 +25,7 @@ func TestParsingWhenOptsAreValid(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{"imagepath", "--scaling", "whatever"},
+			opts: []string{"imagepath", "--scaling", "fill"},
 			want: []opts.Opt{
 				{
 					Name:  "",
@@ -33,16 +33,16 @@ func TestParsingWhenOptsAreValid(t *testing.T) {
 				},
 				{
 					Name:  "--scaling",
-					Value: "whatever",
+					Value: "fill",
 				},
 			},
 		},
 		{
-			opts: []string{"--scaling", "whatever", "imagepath"},
+			opts: []string{"--scaling", "max", "imagepath"},
 			want: []opts.Opt{
 				{
 					Name:  "--scaling",
-					Value: "whatever",
+					Value: "max",
 				},
 				{
 					Name:  "",
@@ -52,7 +52,7 @@ func TestParsingWhenOptsAreValid(t *testing.T) {
 		},
 	}
 
-    parser := setwallpaperopts.Create()
+	parser := setwallpaperopts.Create()
 
 	for _, item := range cases {
 		got, err := parser.Parse(item.opts)
@@ -95,9 +95,21 @@ func TestParsingWhenError(t *testing.T) {
 				OptArgs: []string{"three", "but", "bad"},
 			},
 		},
+		{
+			opts: []string{"imagepath", "--notscaling", "whatever"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"imagepath", "--notscaling", "whatever"},
+			},
+		},
+		{
+			opts: []string{"imagepath", "--scaling", "invalid"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"imagepath", "--scaling", "invalid"},
+			},
+		},
 	}
 
-    parser := setwallpaperopts.Create()
+	parser := setwallpaperopts.Create()
 
 	for _, item := range cases {
 		res, got := parser.Parse(item.opts)

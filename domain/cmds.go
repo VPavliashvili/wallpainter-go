@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"reflect"
 	"sort"
 
@@ -23,19 +22,6 @@ type CmdArgument struct {
 	Flag        flags.Flag
 	Opts        []opts.Opt
 	Description string
-}
-
-var availableArgs = []CmdArgument{
-	{
-		Flag:        flags.Help,
-		Opts:        []opts.Opt{},
-		Description: "Prints this menu",
-	},
-	{
-		Flag:        flags.SetWallpaper,
-		Opts:        []opts.Opt{},
-		Description: fmt.Sprintf("Sets new wallpaper\n      usage: %v /some/path/img.jpg", flags.SetWallpaper),
-	},
 }
 
 func (arg *CmdArgument) Equals(other *CmdArgument) bool {
@@ -60,8 +46,4 @@ func (arg *CmdArgument) Equals(other *CmdArgument) bool {
 	other.Opts = optsOther
 
 	return reflect.DeepEqual(arg, other)
-}
-
-func GetAllCmdArguments() []CmdArgument {
-	return availableArgs
 }

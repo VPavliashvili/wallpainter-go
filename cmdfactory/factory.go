@@ -24,10 +24,6 @@ type factory struct {
 }
 
 func (cf factory) CreateCommand(args []string) (domain.Command, error) {
-	if len(args) == 0 {
-		return nil, errors.New("args should not have been empty")
-	}
-
 	cmds := cf.availableCommands.Get()
 	arg, err := cf.argsParser.Parse(args)
 
@@ -42,5 +38,5 @@ func (cf factory) CreateCommand(args []string) (domain.Command, error) {
 		}
 	}
 
-	return nil, domain.NonExistentCommandError{Argument: *arg}
+	return nil, errors.New("this error should have been handled before this line")
 }

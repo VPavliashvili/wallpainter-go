@@ -21,5 +21,8 @@ func Process() {
 		return
 	}
 
-	command.Execute()
+    err = command.Execute()
+    if err != nil {
+        println(err.Error())
+    }
 }

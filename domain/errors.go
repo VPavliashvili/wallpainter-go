@@ -8,21 +8,17 @@ import (
 )
 
 type NonExistentCommandError struct {
-	Argument CmdArgument
-	Flag     flags.Flag
+	Flag flags.Flag
 }
 
 func (err NonExistentCommandError) Error() string {
-	if err.Flag != "" {
-		return fmt.Sprintf("command with argument '%v' does not exist", err.Flag)
-	}
-	return fmt.Sprintf("command with argument '%v' does not exist", err.Argument)
+	return fmt.Sprintf("command with argument '%v' does not exist\ntype %v to view available commands", err.Flag, flags.Help)
 }
 
 func (err NonExistentCommandError) Is(target error) bool {
 	switch target := target.(type) {
 	case NonExistentCommandError:
-		return err.Argument.Flag == target.Argument.Flag || err.Flag == target.Flag
+		return err.Flag == target.Flag
 	default:
 		panic("only NonExistentCommandError error is expected")
 	}
@@ -30,9 +26,13 @@ func (err NonExistentCommandError) Is(target error) bool {
 
 type InvalidOptionsError struct {
 	OptArgs []string
+    OverridenMsg string
 }
 
 func (err InvalidOptionsError) Error() string {
+    if err.OverridenMsg != "" {
+        return err.OverridenMsg
+    }
 	return fmt.Sprintf("Options -> [%v] are invalid for this command", err.OptArgs)
 }
 
@@ -61,6 +61,12 @@ func (err MoreThanOneFlagError) Is(target error) bool {
 	default:
 		panic("only MoreThanOneFlagError is expected")
 	}
+}
+
+type EmptyInputError struct{}
+
+func (err EmptyInputError) Error() string {
+	return fmt.Sprintf("argument input is empty\nsee %v to view possible options", flags.Help)
 }
 
 type InvalidPathError struct {

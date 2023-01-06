@@ -1,0 +1,1 @@
+package slideshowopts_test

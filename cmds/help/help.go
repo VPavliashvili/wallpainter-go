@@ -9,16 +9,24 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
-func Create() domain.Command {
-	allargs := domain.GetAllCmdArguments()
+var availableArgs = []domain.CmdArgument{
+	{
+		Flag:        flags.Help,
+		Description: "Prints this menu",
+	},
+	{
+		Flag:        flags.SetWallpaper,
+		Description: fmt.Sprintf("Sets new wallpaper\n      usage: %v /some/path/img.jpg", flags.SetWallpaper),
+	},
+}
 
+func Create() domain.Command {
 	return &help{
-		predefined: allargs,
+		predefined: availableArgs,
 	}
 }
 
 type help struct {
-	argument   domain.CmdArgument
 	predefined []domain.CmdArgument
 }
 
@@ -26,9 +34,7 @@ func (h help) Name() string {
 	return flags.Help
 }
 
-func (h *help) SetArgument(a domain.CmdArgument) {
-	h.argument = a
-}
+func (h *help) SetArgument(a domain.CmdArgument) {}
 
 func (h help) Execute() error {
 	builder := builder.Create()

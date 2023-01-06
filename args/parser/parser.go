@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"errors"
-
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
@@ -25,7 +23,7 @@ type concreteParser struct {
 
 func (b concreteParser) Parse(args []string) (*domain.CmdArgument, error) {
 	if len(args) == 0 {
-		return nil, errors.New("args array should not be empty")
+        return nil, domain.EmptyInputError{}
 	}
 
 	argsData := b.allArgumentsData.Get()
