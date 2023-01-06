@@ -57,34 +57,3 @@ func (f fakeoptsparser) Parse(s []string) (res []opts.Opt, err error) {
 
 	return res, err
 }
-
-//func (f fakeCmdData) Get() []domain.Argument {
-//return []domain.Argument{
-//{
-//Flag: flags.ToFlag(flag1),
-//Opts: []opts.Opt{
-//{
-//Name:  opt11,
-//Value: optval11,
-//},
-//{
-//Name:  opt12,
-//Value: "",
-//},
-//},
-//},
-//{
-//Flag: flags.ToFlag(flag2),
-//Opts: []opts.Opt{},
-//},
-//{
-//Flag: flags.Flag(set),
-//Opts: []opts.Opt{
-//{
-//Name:  "",
-//Value: setopt,
-//},
-//},
-//},
-//}
-//}
