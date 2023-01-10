@@ -2,10 +2,11 @@ package setwallpaper
 
 import (
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
-func Create() domain.Command {
+func Create() cmds.Command {
 	return &setWallpaper{
 		io: io{},
 	}
@@ -36,7 +37,7 @@ func (setWallpaper) Name() string {
 	return flags.SetWallpaper
 }
 
-func (s *setWallpaper) SetArgument(arg domain.CmdArgument) {
+func (s *setWallpaper) SetArgument(arg cmds.CmdArgument) {
 	for _, opt := range arg.Opts {
 		if opt.Name == "--scaling" {
             s.scaling = opt.Value

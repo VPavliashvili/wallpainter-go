@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 )
 
 func Create() HelpBuilder{
@@ -14,7 +14,7 @@ func Create() HelpBuilder{
 const Tab = "      "
 
 type HelpBuilder interface {
-	GetHelp(domain.CmdArgument) string
+	GetHelp(cmds.CmdArgument) string
 }
 
 type concreteBuilder struct{
@@ -32,7 +32,7 @@ func getDescriptionInfo(desc string) string {
 	return fmt.Sprintf("%v", desc)
 }
 
-func (b concreteBuilder) GetHelp(arg domain.CmdArgument) string {
+func (b concreteBuilder) GetHelp(arg cmds.CmdArgument) string {
     flag := string(arg.Flag)
 	result := fmt.Sprintf("%v\n%v%v\n", getNameInfo(flag), Tab, getDescriptionInfo(arg.Description))
 	return result

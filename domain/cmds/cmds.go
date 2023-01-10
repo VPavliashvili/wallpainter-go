@@ -1,4 +1,4 @@
-package domain
+package cmds
 
 import (
 	"reflect"

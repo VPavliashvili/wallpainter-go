@@ -6,17 +6,18 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
 func TestShouldSeparateFlagAndOptsCorrectly(t *testing.T) {
 	cases := []struct {
 		args []string
-		want domain.CmdArgument
+		want cmds.CmdArgument
 	}{
 		{
 			args: []string{flag1, opt11, optval11},
-			want: domain.CmdArgument{
+			want: cmds.CmdArgument{
 				Flag:        flag1,
 				Opts:        []opts.Opt{{Name: opt11, Value: optval11}},
 				Description: "",

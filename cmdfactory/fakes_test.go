@@ -1,13 +1,13 @@
 package cmdfactory_test
 
 import (
-	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-func getFakeArgument(flag string, opts []opts.Opt) *domain.CmdArgument {
-	return &domain.CmdArgument{
+func getFakeArgument(flag string, opts []opts.Opt) *cmds.CmdArgument {
+	return &cmds.CmdArgument{
 		Flag: flags.ToFlag(flag),
 		Opts: opts,
 	}
@@ -15,7 +15,7 @@ func getFakeArgument(flag string, opts []opts.Opt) *domain.CmdArgument {
 
 type fakeParser struct{}
 
-func (f fakeParser) Parse(args []string) (*domain.CmdArgument, error) {
+func (f fakeParser) Parse(args []string) (*cmds.CmdArgument, error) {
 	result := getFakeArgument(args[0], []opts.Opt{})
 	switch args[0] {
 	case "flag3":
@@ -46,21 +46,21 @@ func (f fakeCommand) Execute() error { return nil }
 
 func (f fakeCommand) Name() string { return f.flagName }
 
-func (f *fakeCommand) SetArgument(arg domain.CmdArgument) {
+func (f *fakeCommand) SetArgument(arg cmds.CmdArgument) {
 	f.flagName = string(arg.Flag)
 	f.opts = arg.Opts
 }
 
 type fakeProvider struct {
-	fakeCmds []domain.Command
+	fakeCmds []cmds.Command
 }
 
-func (f fakeProvider) Get() []domain.Command {
+func (f fakeProvider) Get() []cmds.Command {
 	return f.fakeCmds
 }
 
 var fakeAvailableCommands fakeProvider = fakeProvider{
-	fakeCmds: []domain.Command{
+	fakeCmds: []cmds.Command{
 		&fakeCommand{
 			flagName: "flag1",
 		},

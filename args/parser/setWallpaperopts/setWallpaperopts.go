@@ -4,18 +4,10 @@ import (
 	"fmt"
 
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/setwallpaper"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 	"golang.org/x/exp/slices"
-)
-
-const scaling = "--scaling"
-const (
-	scale  = "scale"
-	tile   = "tile"
-	center = "center"
-	max    = "max"
-	fill   = "fill"
 )
 
 func Create() opts.OptParser {
@@ -26,10 +18,10 @@ type parser struct{}
 
 func (p parser) Parse(opts []string) ([]opts.Opt, error) {
 
-    err := validateIncomingInput(opts)
-    if err != nil {
-        return nil, err
-    }
+	err := validateIncomingInput(opts)
+	if err != nil {
+		return nil, err
+	}
 
 	res := getSetWallpaperCommandOpts(opts)
 
@@ -53,12 +45,12 @@ func validateIncomingInput(opts []string) error {
 		}
 		scalingopt := ""
 		for _, opt := range opts {
-			if opt == scaling {
-				scalingopt = scaling
+			if opt == data.Scaling {
+				scalingopt = data.Scaling
 				break
 			}
 		}
-		if scalingopt != scaling {
+		if scalingopt != data.Scaling {
 			for _, opt := range opts {
 				if domain.IsOptName(opt) {
 					scalingopt = opt
@@ -71,12 +63,12 @@ func validateIncomingInput(opts []string) error {
 
 		scalingval := ""
 		for i, opt := range opts {
-			if opt == scaling {
+			if opt == data.Scaling {
 				scalingval = opts[i+1]
 				break
 			}
 		}
-		if scalingval != scale && scalingval != tile && scalingval != center && scalingval != max && scalingval != fill {
+		if data.IsOnveOfScalingOption(scalingval) {
 			err.OverridenMsg = fmt.Sprintf("'%v' is not proper keyword for option %v", scalingval, scalingopt)
 			return err
 		}

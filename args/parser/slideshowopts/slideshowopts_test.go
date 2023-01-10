@@ -10,7 +10,7 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-func TestWhenOnlyOneArgument(t *testing.T) {
+func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 	cases := []struct {
 		opts []string
 		want []opts.Opt
@@ -42,6 +42,54 @@ func TestWhenOnlyOneArgument(t *testing.T) {
 	}
 }
 
+func TestWhenParsingRecursive(t *testing.T) {
+	cases := []struct {
+		opts []string
+		want []opts.Opt
+	}{
+		{
+			opts: []string{"/path/to/some/folder/", "-r"},
+			want: []opts.Opt{
+				{
+					Name:  "",
+					Value: "/path/to/some/folder/",
+				},
+				{
+					Name:  "",
+					Value: "-r",
+				},
+			},
+		},
+		{
+			opts: []string{"-r", "/path/to/some/folder/"},
+			want: []opts.Opt{
+				{
+					Name:  "",
+					Value: "-r",
+				},
+				{
+					Name:  "",
+					Value: "/path/to/some/folder/",
+				},
+			},
+		},
+	}
+
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		got, err := parser.Parse(item.opts)
+		want := item.want
+
+		if err != nil {
+			t.Errorf("error should be nil, got -> %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("error in slideshow opts parsing\ngot\n%v\nwant\n%v", got, want)
+		}
+	}
+}
+
 func TestWhenOnlyOneArgButError(t *testing.T) {
 	cases := []struct {
 		opts []string
@@ -67,4 +115,36 @@ func TestWhenOnlyOneArgButError(t *testing.T) {
 			t.Errorf("should have thrown an error\ngot\n%v\nwant\n%v", err, want)
 		}
 	}
+}
+
+func TestWhenTwoArgsButError(t *testing.T) {
+	cases := []struct {
+		opts []string
+		err  error
+	}{
+		{
+			opts: []string{"/valid/folder", "--invalidopt"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"/valid/folder", "--invalidopt"},
+			},
+		},
+		{
+			opts: []string{"--invalidopt", "/valid/folder"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"--invalidopt", "/valid/folder"},
+			},
+		},
+	}
+    parser := slideshowopts.Create()
+    for _, item := range cases {
+        res, err := parser.Parse(item.opts)
+        want := item.err
+
+		if res != nil {
+			t.Errorf("result should be nil in this case, got -> %v", res)
+		}
+		if !errors.Is(err, want) {
+			t.Errorf("should have thrown an error\ngot\n%v\nwant\n%v", err, want)
+		}
+    }
 }

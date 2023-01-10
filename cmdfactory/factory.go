@@ -4,10 +4,10 @@ import (
 	"errors"
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
-	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 )
 
-func Create(commandsprovider domain.AvailableCommandsProvider, parser parser.Parser) CommandFactory {
+func Create(commandsprovider cmds.AvailableCommandsProvider, parser parser.Parser) CommandFactory {
 	return factory{
 		availableCommands: commandsprovider,
 		argsParser:        parser,
@@ -15,15 +15,15 @@ func Create(commandsprovider domain.AvailableCommandsProvider, parser parser.Par
 }
 
 type CommandFactory interface {
-	CreateCommand([]string) (domain.Command, error)
+	CreateCommand([]string) (cmds.Command, error)
 }
 
 type factory struct {
-	availableCommands domain.AvailableCommandsProvider
+	availableCommands cmds.AvailableCommandsProvider
 	argsParser        parser.Parser
 }
 
-func (cf factory) CreateCommand(args []string) (domain.Command, error) {
+func (cf factory) CreateCommand(args []string) (cmds.Command, error) {
 	cmds := cf.availableCommands.Get()
 	arg, err := cf.argsParser.Parse(args)
 

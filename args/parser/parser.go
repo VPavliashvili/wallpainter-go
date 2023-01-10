@@ -2,6 +2,7 @@ package parser
 
 import (
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 	"golang.org/x/exp/slices"
@@ -14,14 +15,13 @@ func Create(data domain.RawArgsProvider) Parser {
 }
 
 type Parser interface {
-	Parse([]string) (*domain.CmdArgument, error)
+	Parse([]string) (*cmds.CmdArgument, error)
 }
-
 type concreteParser struct {
 	allArgumentsData domain.RawArgsProvider
 }
 
-func (b concreteParser) Parse(args []string) (*domain.CmdArgument, error) {
+func (b concreteParser) Parse(args []string) (*cmds.CmdArgument, error) {
 	if len(args) == 0 {
         return nil, domain.EmptyInputError{}
 	}
@@ -45,7 +45,7 @@ func (b concreteParser) Parse(args []string) (*domain.CmdArgument, error) {
 		return nil, err
 	}
 
-	result := &domain.CmdArgument{
+	result := &cmds.CmdArgument{
 		Flag:        flags.Flag(flag),
 		Opts:        opts,
 		Description: "",
