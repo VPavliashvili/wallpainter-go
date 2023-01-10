@@ -21,7 +21,6 @@ type AvailableCommandsProvider interface {
 type CmdArgument struct {
 	Flag        flags.Flag
 	Opts        []opts.Opt
-	Description string
 }
 
 func (arg *CmdArgument) Equals(other *CmdArgument) bool {

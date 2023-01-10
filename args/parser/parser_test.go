@@ -20,7 +20,6 @@ func TestShouldSeparateFlagAndOptsCorrectly(t *testing.T) {
 			want: cmds.CmdArgument{
 				Flag:        flag1,
 				Opts:        []opts.Opt{{Name: opt11, Value: optval11}},
-				Description: "",
 			},
 		},
 	}

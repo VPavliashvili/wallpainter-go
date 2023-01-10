@@ -6,8 +6,6 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-
-
 func IsOptName(arg string) bool {
 	return strings.HasPrefix(arg, "-")
 }

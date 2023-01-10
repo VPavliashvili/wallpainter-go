@@ -45,12 +45,12 @@ func validateIncomingInput(opts []string) error {
 		}
 		scalingopt := ""
 		for _, opt := range opts {
-			if opt == data.Scaling {
-				scalingopt = data.Scaling
+			if opt == data.ScalingOpt {
+				scalingopt = data.ScalingOpt
 				break
 			}
 		}
-		if scalingopt != data.Scaling {
+		if scalingopt != data.ScalingOpt {
 			for _, opt := range opts {
 				if domain.IsOptName(opt) {
 					scalingopt = opt
@@ -63,7 +63,7 @@ func validateIncomingInput(opts []string) error {
 
 		scalingval := ""
 		for i, opt := range opts {
-			if opt == data.Scaling {
+			if opt == data.ScalingOpt {
 				scalingval = opts[i+1]
 				break
 			}

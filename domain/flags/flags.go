@@ -6,7 +6,3 @@ const (
 )
 
 type Flag string
-
-func ToFlag(s string) Flag {
-    return Flag(s)
-}

@@ -8,7 +8,7 @@ import (
 
 func getFakeArgument(flag string, opts []opts.Opt) *cmds.CmdArgument {
 	return &cmds.CmdArgument{
-		Flag: flags.ToFlag(flag),
+		Flag: flags.Flag(flag),
 		Opts: opts,
 	}
 }

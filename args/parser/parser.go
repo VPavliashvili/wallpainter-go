@@ -48,7 +48,6 @@ func (b concreteParser) Parse(args []string) (*cmds.CmdArgument, error) {
 	result := &cmds.CmdArgument{
 		Flag:        flags.Flag(flag),
 		Opts:        opts,
-		Description: "",
 	}
 	return result, nil
 }
