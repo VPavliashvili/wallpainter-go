@@ -7,6 +7,7 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser/slideshowopts"
 	"github.com/VPavliashvili/wallpainter-go/domain"
+	"github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
@@ -90,6 +91,37 @@ func TestWhenParsingRecursive(t *testing.T) {
 	}
 }
 
+func TestWhenParsingWithImageOpt(t *testing.T) {
+	cases := []struct {
+		opts []string
+		want []opts.Opt
+	}{
+		{
+			opts: []string{"--images", "/path/"},
+			want: []opts.Opt{
+				{
+					Name:  "--images",
+					Value: "/path/",
+				},
+			},
+		},
+	}
+
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		got, err := parser.Parse(item.opts)
+		want := item.want
+
+		if err != nil {
+			t.Errorf("error should be nil, got -> %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("error in slideshow opts parsing\ngot\n%v\nwant\n%v", got, want)
+		}
+	}
+}
+
 func TestWhenOnlyOneArgButError(t *testing.T) {
 	cases := []struct {
 		opts []string
@@ -134,11 +166,29 @@ func TestWhenTwoArgsButError(t *testing.T) {
 				OptArgs: []string{"--invalidopt", "/valid/folder"},
 			},
 		},
+		{
+			opts: []string{"invalid path", slideshow.Recursiveopt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"invalid path", slideshow.Recursiveopt},
+			},
+		},
+		{
+			opts: []string{slideshow.Recursiveopt, "invalid path"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.Recursiveopt, "invalid path"},
+			},
+		},
+		{
+			opts: []string{"invalid path", "--invalidopt"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"invalid path", "--invalidopt"},
+			},
+		},
 	}
-    parser := slideshowopts.Create()
-    for _, item := range cases {
-        res, err := parser.Parse(item.opts)
-        want := item.err
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		res, err := parser.Parse(item.opts)
+		want := item.err
 
 		if res != nil {
 			t.Errorf("result should be nil in this case, got -> %v", res)
@@ -146,5 +196,5 @@ func TestWhenTwoArgsButError(t *testing.T) {
 		if !errors.Is(err, want) {
 			t.Errorf("should have thrown an error\ngot\n%v\nwant\n%v", err, want)
 		}
-    }
+	}
 }
