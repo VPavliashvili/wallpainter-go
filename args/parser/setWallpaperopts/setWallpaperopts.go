@@ -2,9 +2,11 @@ package setwallpaperopts
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/setwallpaper"
+	"github.com/VPavliashvili/wallpainter-go/domain/feh"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 	"golang.org/x/exp/slices"
@@ -40,7 +42,7 @@ func validateIncomingInput(opts []string) error {
 	} else if optscount == 3 {
 		// opt at index 0 or 1 should be equal to --scaling
 		// followed with one of its options
-		if !domain.IsOptName(opts[0]) && !domain.IsOptName(opts[1]) {
+		if !IsOptName(opts[0]) && !IsOptName(opts[1]) {
 			return err
 		}
 		scalingopt := ""
@@ -52,7 +54,7 @@ func validateIncomingInput(opts []string) error {
 		}
 		if scalingopt != data.ScalingOpt {
 			for _, opt := range opts {
-				if domain.IsOptName(opt) {
+				if IsOptName(opt) {
 					scalingopt = opt
 					break
 				}
@@ -68,7 +70,7 @@ func validateIncomingInput(opts []string) error {
 				break
 			}
 		}
-		if data.IsOnveOfScalingOption(scalingval) {
+		if feh.IsNotOnveOfScalingOption(scalingval) {
 			err.OverridenMsg = fmt.Sprintf("'%v' is not proper keyword for option %v", scalingval, scalingopt)
 			return err
 		}
@@ -81,7 +83,7 @@ func getSetWallpaperCommandOpts(optArgs []string) []opts.Opt {
 	var usedIndexes []int
 	for i := 0; i < len(optArgs); i++ {
 		arg := optArgs[i]
-		if domain.IsOptName(arg) {
+		if IsOptName(arg) {
 			next := opts.Opt{Name: arg, Value: optArgs[i+1]}
 			usedIndexes = append(usedIndexes, i+1)
 			result = append(result, next)
@@ -94,4 +96,8 @@ func getSetWallpaperCommandOpts(optArgs []string) []opts.Opt {
 	}
 
 	return result
+}
+
+func IsOptName(arg string) bool {
+	return strings.HasPrefix(arg, "-")
 }

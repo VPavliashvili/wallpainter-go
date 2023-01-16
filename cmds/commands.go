@@ -5,6 +5,7 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/cmdfactory"
 	"github.com/VPavliashvili/wallpainter-go/cmds/help"
 	setwallpaper "github.com/VPavliashvili/wallpainter-go/cmds/setWallpaper"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 )
 
@@ -27,6 +28,6 @@ func Create(input []string) (cmds.Command, error) {
 
 var available = []cmds.Command{
 	help.Create(),
-    setwallpaper.Create(),
+	setwallpaper.Create(),
+	slideshow.Create(),
 }
-

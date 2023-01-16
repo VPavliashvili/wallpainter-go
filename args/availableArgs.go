@@ -4,6 +4,7 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/args/parser"
 	"github.com/VPavliashvili/wallpainter-go/args/parser/helpopts"
 	setwallpaperopts "github.com/VPavliashvili/wallpainter-go/args/parser/setWallpaperopts"
+	"github.com/VPavliashvili/wallpainter-go/args/parser/slideshowopts"
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
@@ -26,5 +27,9 @@ var rawavailable = []domain.RawArgument{
 	{
 		Flag:       flags.SetWallpaper,
 		OptsParser: setwallpaperopts.Create(),
+	},
+	{
+		Flag:       flags.RunSlideShow,
+		OptsParser: slideshowopts.Create(),
 	},
 }

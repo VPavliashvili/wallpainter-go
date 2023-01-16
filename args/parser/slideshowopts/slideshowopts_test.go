@@ -25,6 +25,19 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 				},
 			},
 		},
+		{
+			opts: []string{"/path/to/folder/", slideshow.TimeOpt, "10"},
+			want: []opts.Opt{
+				{
+					Name:  "",
+					Value: "/path/to/folder/",
+				},
+				{
+					Name:  slideshow.TimeOpt,
+					Value: "10",
+				},
+			},
+		},
 	}
 
 	parser := slideshowopts.Create()
@@ -48,29 +61,46 @@ func TestWhenParsingRecursive(t *testing.T) {
 		opts []string
 		want []opts.Opt
 	}{
+        {
+            opts: []string{"/path/to/some/folder/", "-r"},
+            want: []opts.Opt{
+                {
+                    Name:  "",
+                    Value: "/path/to/some/folder/",
+                },
+                {
+                    Name:  "",
+                    Value: "-r",
+                },
+            },
+        },
+        {
+            opts: []string{"-r", "/path/to/some/folder/"},
+            want: []opts.Opt{
+                {
+                    Name:  "",
+                    Value: "-r",
+                },
+                {
+                    Name:  "",
+                    Value: "/path/to/some/folder/",
+                },
+            },
+        },
 		{
-			opts: []string{"/path/to/some/folder/", "-r"},
+			opts: []string{"/path/to/folder/", "-r", slideshow.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
 					Name:  "",
-					Value: "/path/to/some/folder/",
+					Value: "/path/to/folder/",
 				},
 				{
 					Name:  "",
 					Value: "-r",
 				},
-			},
-		},
-		{
-			opts: []string{"-r", "/path/to/some/folder/"},
-			want: []opts.Opt{
 				{
-					Name:  "",
-					Value: "-r",
-				},
-				{
-					Name:  "",
-					Value: "/path/to/some/folder/",
+					Name:  slideshow.TimeOpt,
+					Value: "10",
 				},
 			},
 		},
@@ -97,11 +127,113 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 		want []opts.Opt
 	}{
 		{
-			opts: []string{"--images", "/path/"},
+			opts: []string{slideshow.ImagesOpt, "/path/"},
 			want: []opts.Opt{
 				{
-					Name:  "--images",
-					Value: "/path/",
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path/",
+					Value: "",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path1/", "/path2/"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path1/",
+					Value: "",
+				},
+				{
+					Name:  "/path2/",
+					Value: "",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path1/", "/path2/", "/path3/"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path1/",
+					Value: "",
+				},
+				{
+					Name:  "/path2/",
+					Value: "",
+				},
+				{
+					Name:  "/path3/",
+					Value: "",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", "max"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path/",
+					Value: "max",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path1/", "fill", "/path2/"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path1/",
+					Value: "fill",
+				},
+				{
+					Name:  "/path2/",
+					Value: "",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", "/path/"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path/",
+					Value: "",
+				},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10"},
+			want: []opts.Opt{
+				{
+					Name:  slideshow.ImagesOpt,
+					Value: "",
+				},
+				{
+					Name:  "/path/",
+					Value: "",
+				},
+				{
+					Name:  slideshow.TimeOpt,
+					Value: "10",
 				},
 			},
 		},
@@ -120,6 +252,81 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			t.Errorf("error in slideshow opts parsing\ngot\n%v\nwant\n%v", got, want)
 		}
 	}
+
+}
+
+func TestWhenImagesArgButError(t *testing.T) {
+	cases := []struct {
+		opts []string
+		err  error
+	}{
+		{
+			opts: []string{},
+			err:  domain.InvalidOptionsError{},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "notint"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "notint"},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10", slideshow.TimeOpt, "5"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10", slideshow.TimeOpt, "5"},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "not an image path"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "not an image path"},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "not an image path", "/validpath/"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "not an image path", "/validpath/"},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "/path/", "but not valid feh scaling option"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "/path/", "but not valid feh scaling option"},
+			},
+		},
+		{
+			opts: []string{slideshow.ImagesOpt, "scale", "/path/"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.ImagesOpt, "scale", "/path/"},
+			},
+		},
+	}
+
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		res, err := parser.Parse(item.opts)
+		want := item.err
+
+		if res != nil {
+			t.Errorf("result should be nil in this case, got -> %v", res)
+		}
+		if !errors.Is(err, want) {
+			t.Errorf("should have thrown an error\ngot\n%v\nwant\n%v", err, want)
+		}
+	}
+
 }
 
 func TestWhenOnlyOneArgButError(t *testing.T) {
