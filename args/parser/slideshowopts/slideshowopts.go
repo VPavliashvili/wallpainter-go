@@ -41,7 +41,7 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 				next := options[i+1]
 
 				if _, err := strconv.Atoi(next); err != nil {
-                    return nil, domain.InvalidOptionsError{OptArgs: options}
+					return nil, domain.InvalidOptionsError{OptArgs: options}
 				}
 
 				timeopt = opts.Opt{
@@ -57,6 +57,9 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 	}
 
 	if foundTimeOpt {
+		if len(options) <= 2 {
+			return nil, domain.InvalidOptionsError{OptArgs: options}
+		}
 		options = removeIndex(options, indexToRemove+1)
 		options = removeIndex(options, indexToRemove)
 	}

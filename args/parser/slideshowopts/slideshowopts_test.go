@@ -61,32 +61,32 @@ func TestWhenParsingRecursive(t *testing.T) {
 		opts []string
 		want []opts.Opt
 	}{
-        {
-            opts: []string{"/path/to/some/folder/", "-r"},
-            want: []opts.Opt{
-                {
-                    Name:  "",
-                    Value: "/path/to/some/folder/",
-                },
-                {
-                    Name:  "",
-                    Value: "-r",
-                },
-            },
-        },
-        {
-            opts: []string{"-r", "/path/to/some/folder/"},
-            want: []opts.Opt{
-                {
-                    Name:  "",
-                    Value: "-r",
-                },
-                {
-                    Name:  "",
-                    Value: "/path/to/some/folder/",
-                },
-            },
-        },
+		{
+			opts: []string{"/path/to/some/folder/", "-r"},
+			want: []opts.Opt{
+				{
+					Name:  "",
+					Value: "/path/to/some/folder/",
+				},
+				{
+					Name:  "",
+					Value: "-r",
+				},
+			},
+		},
+		{
+			opts: []string{"-r", "/path/to/some/folder/"},
+			want: []opts.Opt{
+				{
+					Name:  "",
+					Value: "-r",
+				},
+				{
+					Name:  "",
+					Value: "/path/to/some/folder/",
+				},
+			},
+		},
 		{
 			opts: []string{"/path/to/folder/", "-r", slideshow.TimeOpt, "10"},
 			want: []opts.Opt{
@@ -268,6 +268,12 @@ func TestWhenImagesArgButError(t *testing.T) {
 			opts: []string{slideshow.ImagesOpt},
 			err: domain.InvalidOptionsError{
 				OptArgs: []string{slideshow.ImagesOpt},
+			},
+		},
+		{
+			opts: []string{slideshow.TimeOpt, "10"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{slideshow.TimeOpt, "10"},
 			},
 		},
 		{
