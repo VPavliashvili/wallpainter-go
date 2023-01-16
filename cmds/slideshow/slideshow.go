@@ -7,14 +7,19 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
+const timeoptDefaultVal = 1
+const recursiveDefaultVal = false
+
 func Create() cmds.Command {
-    return runslideshow{}
+    return &runslideshow{}
 }
 
 type runslideshow struct {
+    args cmds.CmdArgument
 }
 
-func (r runslideshow) SetArgument(arg cmds.CmdArgument) {}
+func (r *runslideshow) SetArgument(arg cmds.CmdArgument) {
+}
 func (r runslideshow) Execute() error {
     return errors.New("not implemented yet")
 }

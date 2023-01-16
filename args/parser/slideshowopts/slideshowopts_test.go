@@ -20,7 +20,7 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 			opts: []string{"/path/to/some/folder/"},
 			want: []opts.Opt{
 				{
-					Name:  "",
+					Name:  slideshow.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 			},
@@ -29,7 +29,7 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 			opts: []string{"/path/to/folder/", slideshow.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
-					Name:  "",
+					Name:  slideshow.FolderPathOptName,
 					Value: "/path/to/folder/",
 				},
 				{
@@ -65,7 +65,7 @@ func TestWhenParsingRecursive(t *testing.T) {
 			opts: []string{"/path/to/some/folder/", "-r"},
 			want: []opts.Opt{
 				{
-					Name:  "",
+					Name:  slideshow.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 				{
@@ -82,7 +82,7 @@ func TestWhenParsingRecursive(t *testing.T) {
 					Value: "-r",
 				},
 				{
-					Name:  "",
+					Name:  slideshow.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 			},
@@ -91,7 +91,7 @@ func TestWhenParsingRecursive(t *testing.T) {
 			opts: []string{"/path/to/folder/", "-r", slideshow.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
-					Name:  "",
+					Name:  slideshow.FolderPathOptName,
 					Value: "/path/to/folder/",
 				},
 				{

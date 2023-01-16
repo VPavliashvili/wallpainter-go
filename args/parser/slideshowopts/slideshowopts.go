@@ -75,14 +75,25 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 
 	if len(options) == 2 {
 		if isRecursiveSlideShow(options) {
-			res = append(res, opts.Opt{
-				Name:  "",
-				Value: options[0],
-			})
-			res = append(res, opts.Opt{
-				Name:  "",
-				Value: options[1],
-			})
+			if looksLikeAFile(options[0]) {
+				res = append(res, opts.Opt{
+					Name:  data.FolderPathOptName,
+					Value: options[0],
+				})
+				res = append(res, opts.Opt{
+					Name:  "",
+					Value: options[1],
+				})
+			} else {
+				res = append(res, opts.Opt{
+					Name:  "",
+					Value: options[0],
+				})
+				res = append(res, opts.Opt{
+					Name:  data.FolderPathOptName,
+					Value: options[1],
+				})
+			}
 
 			if foundTimeOpt {
 				res = append(res, timeopt)
@@ -102,7 +113,7 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 	}
 
 	res = append(res, opts.Opt{
-		Name:  "",
+		Name:  data.FolderPathOptName,
 		Value: firstOpt,
 	})
 
