@@ -24,6 +24,19 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 		}
 	}
 
+    if options[0] == data.HelpOpt {
+        if len(options) > 1{
+            return nil, domain.InvalidOptionsError{
+                OptArgs: options,
+            }
+        }
+        res = append(res, opts.Opt{
+        	Name:  data.HelpOpt,
+        	Value: "",
+        })
+        return res, nil
+    }
+
 	foundTimeOpt := false
 	var timeopt opts.Opt
 	var indexToRemove int
@@ -81,13 +94,13 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 					Value: options[0],
 				})
 				res = append(res, opts.Opt{
-					Name:  "",
-					Value: options[1],
+					Name: options[1],
+                    Value:  "",
 				})
 			} else {
 				res = append(res, opts.Opt{
-					Name:  "",
-					Value: options[0],
+					Name: options[0],
+                    Value:  "",
 				})
 				res = append(res, opts.Opt{
 					Name:  data.FolderPathOptName,

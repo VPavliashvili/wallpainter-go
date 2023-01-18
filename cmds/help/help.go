@@ -8,12 +8,14 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	helpdata "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/help"
 	setwpdata "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/setwallpaper"
+	slideshowdata "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
 
 var available = map[flags.Flag]string {
     helpdata.Flag:helpdata.Description,
     setwpdata.Flag:setwpdata.Description,
+    slideshowdata.Flag:slideshowdata.Description,
 }
 
 func Create() cmds.Command {

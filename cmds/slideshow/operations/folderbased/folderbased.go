@@ -1,8 +1,8 @@
 package folderbased
 
 import (
-	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/models"
-	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/sharedbehaviour"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/sharedbehaviour"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"

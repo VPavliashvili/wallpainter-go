@@ -7,7 +7,7 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/args/parser/slideshowopts"
 	"github.com/VPavliashvili/wallpainter-go/domain"
-	"github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
+	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
@@ -20,20 +20,20 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 			opts: []string{"/path/to/some/folder/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.FolderPathOptName,
+					Name:  data.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 			},
 		},
 		{
-			opts: []string{"/path/to/folder/", slideshow.TimeOpt, "10"},
+			opts: []string{"/path/to/folder/", data.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.FolderPathOptName,
+					Name:  data.FolderPathOptName,
 					Value: "/path/to/folder/",
 				},
 				{
-					Name:  slideshow.TimeOpt,
+					Name:  data.TimeOpt,
 					Value: "10",
 				},
 			},
@@ -62,44 +62,44 @@ func TestWhenParsingRecursive(t *testing.T) {
 		want []opts.Opt
 	}{
 		{
-			opts: []string{"/path/to/some/folder/", "-r"},
+			opts: []string{"/path/to/some/folder/", data.Recursiveopt},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.FolderPathOptName,
+					Name:  data.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 				{
-					Name:  "",
-					Value: "-r",
+					Name:  data.Recursiveopt,
+					Value: "",
 				},
 			},
 		},
 		{
-			opts: []string{"-r", "/path/to/some/folder/"},
+			opts: []string{data.Recursiveopt, "/path/to/some/folder/"},
 			want: []opts.Opt{
 				{
-					Name:  "",
-					Value: "-r",
+					Name:  data.Recursiveopt,
+					Value: "",
 				},
 				{
-					Name:  slideshow.FolderPathOptName,
+					Name:  data.FolderPathOptName,
 					Value: "/path/to/some/folder/",
 				},
 			},
 		},
 		{
-			opts: []string{"/path/to/folder/", "-r", slideshow.TimeOpt, "10"},
+			opts: []string{"/path/to/folder/", data.Recursiveopt, data.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.FolderPathOptName,
+					Name:  data.FolderPathOptName,
 					Value: "/path/to/folder/",
 				},
 				{
-					Name:  "",
-					Value: "-r",
+					Name: data.Recursiveopt,
+                    Value:  "",
 				},
 				{
-					Name:  slideshow.TimeOpt,
+					Name:  data.TimeOpt,
 					Value: "10",
 				},
 			},
@@ -127,10 +127,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 		want []opts.Opt
 	}{
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/"},
+			opts: []string{data.ImagesOpt, "/path/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -140,10 +140,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path1/", "/path2/"},
+			opts: []string{data.ImagesOpt, "/path1/", "/path2/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -157,10 +157,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path1/", "/path2/", "/path3/"},
+			opts: []string{data.ImagesOpt, "/path1/", "/path2/", "/path3/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -178,10 +178,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", "max"},
+			opts: []string{data.ImagesOpt, "/path/", "max"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -191,10 +191,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path1/", "fill", "/path2/"},
+			opts: []string{data.ImagesOpt, "/path1/", "fill", "/path2/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -208,10 +208,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", "/path/"},
+			opts: []string{data.ImagesOpt, "/path/", "/path/"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -221,10 +221,10 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10"},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10"},
 			want: []opts.Opt{
 				{
-					Name:  slideshow.ImagesOpt,
+					Name:  data.ImagesOpt,
 					Value: "",
 				},
 				{
@@ -232,7 +232,7 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 					Value: "",
 				},
 				{
-					Name:  slideshow.TimeOpt,
+					Name:  data.TimeOpt,
 					Value: "10",
 				},
 			},
@@ -255,6 +255,37 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 
 }
 
+func TestWhenHelpArg(t *testing.T) {
+	cases := []struct {
+		opts []string
+		want []opts.Opt
+	}{
+		{
+			opts: []string{"-h"},
+			want: []opts.Opt{
+				{
+					Name:  data.HelpOpt,
+					Value: "",
+				},
+			},
+		},
+	}
+
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		got, err := parser.Parse(item.opts)
+		want := item.want
+
+		if err != nil {
+			t.Errorf("error should be nil, got -> %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("error in slideshow opts parsing\ngot\n%v\nwant\n%v", got, want)
+		}
+	}
+}
+
 func TestWhenImagesArgButError(t *testing.T) {
 	cases := []struct {
 		opts []string
@@ -265,57 +296,57 @@ func TestWhenImagesArgButError(t *testing.T) {
 			err:  domain.InvalidOptionsError{},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt},
+			opts: []string{data.ImagesOpt},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt},
+				OptArgs: []string{data.ImagesOpt},
 			},
 		},
 		{
-			opts: []string{slideshow.TimeOpt, "10"},
+			opts: []string{data.TimeOpt, "10"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.TimeOpt, "10"},
+				OptArgs: []string{data.TimeOpt, "10"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "notint"},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "notint"},
+				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10", slideshow.TimeOpt, "5"},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10", data.TimeOpt, "5"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt, "10", slideshow.TimeOpt, "5"},
+				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10", data.TimeOpt, "5"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "/path/", slideshow.TimeOpt},
+				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "not an image path"},
+			opts: []string{data.ImagesOpt, "not an image path"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "not an image path"},
+				OptArgs: []string{data.ImagesOpt, "not an image path"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "not an image path", "/validpath/"},
+			opts: []string{data.ImagesOpt, "not an image path", "/validpath/"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "not an image path", "/validpath/"},
+				OptArgs: []string{data.ImagesOpt, "not an image path", "/validpath/"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "/path/", "but not valid feh scaling option"},
+			opts: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "/path/", "but not valid feh scaling option"},
+				OptArgs: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
 			},
 		},
 		{
-			opts: []string{slideshow.ImagesOpt, "scale", "/path/"},
+			opts: []string{data.ImagesOpt, "scale", "/path/"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.ImagesOpt, "scale", "/path/"},
+				OptArgs: []string{data.ImagesOpt, "scale", "/path/"},
 			},
 		},
 	}
@@ -380,15 +411,15 @@ func TestWhenTwoArgsButError(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{"invalid path", slideshow.Recursiveopt},
+			opts: []string{"invalid path", data.Recursiveopt},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{"invalid path", slideshow.Recursiveopt},
+				OptArgs: []string{"invalid path", data.Recursiveopt},
 			},
 		},
 		{
-			opts: []string{slideshow.Recursiveopt, "invalid path"},
+			opts: []string{data.Recursiveopt, "invalid path"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{slideshow.Recursiveopt, "invalid path"},
+				OptArgs: []string{data.Recursiveopt, "invalid path"},
 			},
 		},
 		{
@@ -398,6 +429,51 @@ func TestWhenTwoArgsButError(t *testing.T) {
 			},
 		},
 	}
+	parser := slideshowopts.Create()
+	for _, item := range cases {
+		res, err := parser.Parse(item.opts)
+		want := item.err
+
+		if res != nil {
+			t.Errorf("result should be nil in this case, got -> %v", res)
+		}
+		if !errors.Is(err, want) {
+			t.Errorf("should have thrown an error\ngot\n%v\nwant\n%v", err, want)
+		}
+	}
+}
+
+func TestWhenHelpOptButError(t *testing.T) {
+	cases := []struct {
+		opts []string
+		err  error
+	}{
+		{
+			opts: []string{data.HelpOpt, "anyotheropt"},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{data.HelpOpt, "anyotheropt"},
+			},
+		},
+		{
+			opts: []string{"anyotherButOnIndexZero", data.HelpOpt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"anyotherButOnIndexZero", data.HelpOpt},
+			},
+		},
+		{
+			opts: []string{data.ImagesOpt, data.HelpOpt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{data.ImagesOpt, data.HelpOpt},
+			},
+		},
+		{
+            opts: []string{"/path/", data.HelpOpt},
+			err: domain.InvalidOptionsError{
+				OptArgs: []string{"/path/", data.HelpOpt},
+			},
+		},
+	}
+
 	parser := slideshowopts.Create()
 	for _, item := range cases {
 		res, err := parser.Parse(item.opts)

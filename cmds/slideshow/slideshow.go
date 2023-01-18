@@ -2,7 +2,7 @@ package slideshow
 
 import (
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations"
-	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/models"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )

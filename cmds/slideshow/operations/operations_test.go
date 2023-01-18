@@ -4,10 +4,11 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/folderbased"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/helpbased"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/imagesbased"
-	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/models"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
@@ -40,6 +41,17 @@ var inputImagesBased = cmds.CmdArgument{
 }
 var outputImagesBased = imagesbased.Create(inputImagesBased)
 
+var inputHelpBased = cmds.CmdArgument{
+	Flag: flags.RunSlideShow,
+	Opts: []opts.Opt{
+        {
+        	Name:  data.HelpOpt,
+        	Value: "",
+        },
+    },
+}
+var outputHelpBased = helpbased.Create(inputHelpBased)
+
 func TestCreate(t *testing.T) {
 	cases := []struct {
 		input cmds.CmdArgument
@@ -53,6 +65,10 @@ func TestCreate(t *testing.T) {
 			input: inputImagesBased,
 			want:  outputImagesBased,
 		},
+        {
+        	input: inputHelpBased,
+        	want:  outputHelpBased,
+        },
 	}
 
 	for _, item := range cases {
