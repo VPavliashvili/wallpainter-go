@@ -3,7 +3,7 @@ package flags
 const (
 	Help         = "--help"
 	SetWallpaper = "--set-wallpaper"
-    RunSlideShow = "--run-slideshow"
+    RunSlideShow = "--slideshow"
 )
 
 type Flag string

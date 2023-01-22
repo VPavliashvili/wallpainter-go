@@ -1,6 +1,8 @@
 package imagesbased
 
 import (
+	"time"
+
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/sharedbehaviour"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
@@ -8,7 +10,7 @@ import (
 )
 
 type imagesargument struct {
-	time   float64
+	time   time.Duration
 	images []image
 }
 

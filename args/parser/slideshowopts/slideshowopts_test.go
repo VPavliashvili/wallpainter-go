@@ -26,7 +26,7 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{"/path/to/folder/", data.TimeOpt, "10"},
+			opts: []string{"/path/to/folder/", data.TimeOpt, "10m"},
 			want: []opts.Opt{
 				{
 					Name:  data.FolderPathOptName,
@@ -34,7 +34,20 @@ func TestWhenParsingOnlyFolderOpt(t *testing.T) {
 				},
 				{
 					Name:  data.TimeOpt,
-					Value: "10",
+					Value: "10m",
+				},
+			},
+		},
+		{
+			opts: []string{"/path/to/folder/", data.TimeOpt, "10s"},
+			want: []opts.Opt{
+				{
+					Name:  data.FolderPathOptName,
+					Value: "/path/to/folder/",
+				},
+				{
+					Name:  data.TimeOpt,
+					Value: "10s",
 				},
 			},
 		},
@@ -88,7 +101,7 @@ func TestWhenParsingRecursive(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{"/path/to/folder/", data.Recursiveopt, data.TimeOpt, "10"},
+			opts: []string{"/path/to/folder/", data.Recursiveopt, data.TimeOpt, "10m"},
 			want: []opts.Opt{
 				{
 					Name:  data.FolderPathOptName,
@@ -100,7 +113,7 @@ func TestWhenParsingRecursive(t *testing.T) {
 				},
 				{
 					Name:  data.TimeOpt,
-					Value: "10",
+					Value: "10m",
 				},
 			},
 		},
@@ -221,7 +234,7 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 			},
 		},
 		{
-			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10"},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10m"},
 			want: []opts.Opt{
 				{
 					Name:  data.ImagesOpt,
@@ -233,7 +246,7 @@ func TestWhenParsingWithImageOpt(t *testing.T) {
 				},
 				{
 					Name:  data.TimeOpt,
-					Value: "10",
+					Value: "10m",
 				},
 			},
 		},
@@ -291,64 +304,70 @@ func TestWhenImagesArgButError(t *testing.T) {
 		opts []string
 		err  error
 	}{
+        {
+            opts: []string{},
+            err:  domain.InvalidOptionsError{},
+        },
+        {
+            opts: []string{data.ImagesOpt},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt},
+            },
+        },
+        {
+            opts: []string{data.TimeOpt, "10m"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.TimeOpt, "10m"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10m", data.TimeOpt, "5m"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10m", data.TimeOpt, "5m"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "/path/", data.TimeOpt},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt},
+            },
+        },
 		{
-			opts: []string{},
-			err:  domain.InvalidOptionsError{},
-		},
-		{
-			opts: []string{data.ImagesOpt},
+			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10"},
 			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt},
+				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10"},
 			},
 		},
-		{
-			opts: []string{data.TimeOpt, "10"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.TimeOpt, "10"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "notint"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10", data.TimeOpt, "5"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt, "10", data.TimeOpt, "5"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "/path/", data.TimeOpt},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "/path/", data.TimeOpt},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "not an image path"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "not an image path"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "not an image path", "/validpath/"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "not an image path", "/validpath/"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
-			},
-		},
-		{
-			opts: []string{data.ImagesOpt, "scale", "/path/"},
-			err: domain.InvalidOptionsError{
-				OptArgs: []string{data.ImagesOpt, "scale", "/path/"},
-			},
-		},
+        {
+            opts: []string{data.ImagesOpt, "not an image path"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "not an image path"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "not an image path", "/validpath/"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "not an image path", "/validpath/"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "/path/", "but not valid feh scaling option"},
+            },
+        },
+        {
+            opts: []string{data.ImagesOpt, "scale", "/path/"},
+            err: domain.InvalidOptionsError{
+                OptArgs: []string{data.ImagesOpt, "scale", "/path/"},
+            },
+        },
 	}
 
 	parser := slideshowopts.Create()

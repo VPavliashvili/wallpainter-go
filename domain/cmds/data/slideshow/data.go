@@ -14,7 +14,7 @@ const HelpOpt = "-h"
 
 const FolderPathOptName = "folderpath"
 
-const TimeoptDefaultVal = 1.0
+const TimeoptDefaultVal = 1
 const RecursiveDefaultVal = false
 const ImageDefaultScaling = feh.Scale
 

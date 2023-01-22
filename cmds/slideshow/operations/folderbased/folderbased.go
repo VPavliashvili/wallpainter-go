@@ -1,6 +1,8 @@
 package folderbased
 
 import (
+	"time"
+
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/sharedbehaviour"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
@@ -15,11 +17,18 @@ func Create(arg cmds.CmdArgument) models.Operation {
 
 type pathargument struct {
 	folderpath  string
-	time        float64
+	time       time.Duration
 	isRecursive bool
 }
 
 func (p pathargument) Execute() error {
+    //mychan := make(chan bool)
+
+    //go func() {
+        //dur := time.Duration(p.time)
+        //time.Sleep(p.time * time.Second)
+    //}()
+
 	return nil
 }
 

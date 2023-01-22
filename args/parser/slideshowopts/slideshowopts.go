@@ -24,18 +24,18 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 		}
 	}
 
-    if options[0] == data.HelpOpt {
-        if len(options) > 1{
-            return nil, domain.InvalidOptionsError{
-                OptArgs: options,
-            }
-        }
-        res = append(res, opts.Opt{
-        	Name:  data.HelpOpt,
-        	Value: "",
-        })
-        return res, nil
-    }
+	if options[0] == data.HelpOpt {
+		if len(options) > 1 {
+			return nil, domain.InvalidOptionsError{
+				OptArgs: options,
+			}
+		}
+		res = append(res, opts.Opt{
+			Name:  data.HelpOpt,
+			Value: "",
+		})
+		return res, nil
+	}
 
 	foundTimeOpt := false
 	var timeopt opts.Opt
@@ -52,8 +52,13 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 			foundTimeOpt = true
 			if len(options)-1 >= i+1 {
 				next := options[i+1]
+				if len(next) < 2 {
+					return nil, domain.InvalidOptionsError{OptArgs: options}
+				}
 
-				if _, err := strconv.Atoi(next); err != nil {
+				numpart := next[:len(next)-1]
+				tmpart := next[len(next)-1]
+				if _, err := strconv.Atoi(numpart); err != nil || (tmpart != 'm' && tmpart != 's') {
 					return nil, domain.InvalidOptionsError{OptArgs: options}
 				}
 
@@ -94,13 +99,13 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 					Value: options[0],
 				})
 				res = append(res, opts.Opt{
-					Name: options[1],
-                    Value:  "",
+					Name:  options[1],
+					Value: "",
 				})
 			} else {
 				res = append(res, opts.Opt{
-					Name: options[0],
-                    Value:  "",
+					Name:  options[0],
+					Value: "",
 				})
 				res = append(res, opts.Opt{
 					Name:  data.FolderPathOptName,
