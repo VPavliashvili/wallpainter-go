@@ -3,6 +3,7 @@ package imagesbased
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
@@ -62,12 +63,12 @@ func TestCreateArgumentWhenImages(t *testing.T) {
 					},
 					{
 						Name:  data.TimeOpt,
-						Value: "15",
+						Value: "15s",
 					},
 				},
 			},
 			want: imagesargument{
-				time:   15,
+				time:   15 * time.Second,
 				images: []image{{path: "/path/", scaling: feh.Scale}},
 			},
 		},
@@ -101,4 +102,3 @@ func TestCreateArgumentWhenImages(t *testing.T) {
 		}
 	}
 }
-

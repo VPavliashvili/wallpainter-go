@@ -17,17 +17,17 @@ func Create(arg cmds.CmdArgument) models.Operation {
 
 type pathargument struct {
 	folderpath  string
-	time       time.Duration
+	time        time.Duration
 	isRecursive bool
 }
 
 func (p pathargument) Execute() error {
-    //mychan := make(chan bool)
+	//mychan := make(chan bool)
 
-    //go func() {
-        //dur := time.Duration(p.time)
-        //time.Sleep(p.time * time.Second)
-    //}()
+	//go func() {
+	//dur := time.Duration(p.time)
+	//time.Sleep(p.time * time.Second)
+	//}()
 
 	return nil
 }

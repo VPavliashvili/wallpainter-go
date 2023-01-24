@@ -1,7 +1,6 @@
 package sharedbehaviour
 
 import (
-	"strconv"
 	"time"
 
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
@@ -19,12 +18,11 @@ func GetTimeOpt(options []opts.Opt) time.Duration {
 		return false
 	})
 
-	var res int
 	if contains {
-		res, _ = strconv.Atoi(timeoptAsString)
+		res, _ := data.GetDurationFromOpt(timeoptAsString)
+		return res
 	} else {
-		res = data.TimeoptDefaultVal
+		return data.TimeoptDefaultVal
 	}
 
-	return time.Duration(res)
 }

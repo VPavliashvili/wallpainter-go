@@ -1,8 +1,6 @@
 package slideshowopts
 
 import (
-	"strconv"
-
 	"github.com/VPavliashvili/wallpainter-go/domain"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/feh"
@@ -56,9 +54,7 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 					return nil, domain.InvalidOptionsError{OptArgs: options}
 				}
 
-				numpart := next[:len(next)-1]
-				tmpart := next[len(next)-1]
-				if _, err := strconv.Atoi(numpart); err != nil || (tmpart != 'm' && tmpart != 's') {
+				if _, err := data.GetDurationFromOpt(next); err != nil {
 					return nil, domain.InvalidOptionsError{OptArgs: options}
 				}
 

@@ -16,7 +16,9 @@ func Create(cmds.CmdArgument) models.Operation {
 type helpargument struct{}
 
 func (h helpargument) Execute() error {
-	msg := fmt.Sprintf(`%v command has several options
+	msg := fmt.Sprintf(`
+            %v command has several options
+
       1) run '%v %v' for this help menu
 
       2) run '%v /images/containing/folder/' to simply run this command for all images from the directory
@@ -31,11 +33,14 @@ func (h helpargument) Execute() error {
             example: %v %v ~/pic1.jpg %v ~/pic2.jpg %v
         
       5) '%v' option can be used for every combination of this command to specify time for next wallpaper change.
-         it expects value in minutes or seconds and can be passed int with prefix 'm' or 's'. default value is %v minutes
-            example: %v /folder/ %v 10m (this means change folpapaer from /folder/ in every 10 minutes`,
+         it expects value in minutes or seconds and can be passed int with prefix '%c' or '%c'. default value is %v minutes
+            example: %v /folder/ %v 10m (this means change folpapaer from /folder/ in every 10 minutes
+        `,
 		data.Flag, data.Flag, data.HelpOpt, data.Flag, data.Flag, data.Flag, data.Recursiveopt, data.Flag, data.Recursiveopt,
 		data.Flag, data.ImagesOpt, data.Flag, data.ImagesOpt, feh.GetOptionAsString(), feh.Scale,
-		data.Flag, data.ImagesOpt, feh.Center, feh.Max, data.TimeOpt, data.TimeoptDefaultVal, data.Flag, data.TimeOpt)
+		data.Flag, data.ImagesOpt, feh.Center, feh.Max, data.TimeOpt,
+		data.Minute, data.Second,
+		data.TimeoptDefaultVal, data.Flag, data.TimeOpt)
 
 	fmt.Println(msg)
 	return nil
