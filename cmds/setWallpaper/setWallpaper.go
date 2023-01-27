@@ -8,18 +8,18 @@ import (
 
 func Create() cmds.Command {
 	return &setWallpaper{
-		io: iohandler.Create(),
+		setter: iohandler.GetWallpaperSetter(),
 	}
 }
 
 type setWallpaper struct {
-	io      iohandler.IO
+	setter      iohandler.WallpaperSetter
 	imgPath string
 	scaling string
 }
 
 func (s setWallpaper) Execute() error {
-	err := s.io.SetWallpaper(s.imgPath, s.scaling)
+	err := s.setter.SetWallpaper(s.imgPath, s.scaling)
 	if err != nil {
 		return err
 	}

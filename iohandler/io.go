@@ -8,18 +8,18 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain"
 )
 
-func Create() IO {
-    return io{}
+func GetWallpaperSetter() WallpaperSetter {
+    return wallpaperSetter{}
 }
 
-type io struct{}
+type wallpaperSetter struct{}
 
-func (i io) exist(file string) bool {
+func (i wallpaperSetter) exist(file string) bool {
 	_, err := os.Stat(file)
 	return !os.IsNotExist(err)
 }
 
-func (i io) SetWallpaper(file string, scaling string) error {
+func (i wallpaperSetter) SetWallpaper(file string, scaling string) error {
 	if !i.exist(file) {
 		return domain.InvalidPathError{Path: file}
 	} else if !isPicture(file) {

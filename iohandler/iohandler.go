@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-type IO interface {
+type WallpaperSetter interface {
 	//Exist(file string) bool
 	//IsPicture(file string) bool
 	SetWallpaper(file string, scalign string) error

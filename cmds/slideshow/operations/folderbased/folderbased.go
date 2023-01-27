@@ -1,6 +1,8 @@
 package folderbased
 
 import (
+	"fmt"
+	"math/rand"
 	"os"
 	"time"
 
@@ -10,6 +12,7 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
+	"github.com/VPavliashvili/wallpainter-go/iohandler"
 	"golang.org/x/exp/slices"
 )
 
@@ -29,16 +32,34 @@ func (p pathargument) Execute() error {
 		return domain.InvalidPathError{Path: p.folderpath}
 	}
 
-	//fmt.Printf("execution of folderbased started\n")
+	fmt.Printf("execution of folderbased started\n")
 
-	//for i := time.Second; i <= p.time; i += time.Second {
-	//time.Sleep(time.Second)
-	//fmt.Printf("%v has passed\n", i)
-	//}
 
-	//fmt.Printf("execution of folderbased ended\n")
+	wallpeperSetter := iohandler.GetWallpaperSetter()
+	pictures, err := iohandler.GetPictures(p.folderpath, p.isRecursive)
+	source := rand.NewSource(time.Now().Unix())
+	random := rand.New(source)
 
-	return nil
+	if err != nil {
+		return err
+	}
+
+	index := random.Intn(len(pictures))
+	pic := pictures[index]
+
+	err = wallpeperSetter.SetWallpaper(pic, data.ImageDefaultScaling)
+	if err != nil {
+		return err
+	}
+
+    for i := time.Second; i <= p.time; i += time.Second {
+        time.Sleep(time.Second)
+        fmt.Printf("%v has passed\n", i)
+    }
+
+	fmt.Printf("execution of folderbased ended\n")
+
+	return p.Execute()
 }
 
 func createArgumentWithFolderPath(arg cmds.CmdArgument) pathargument {
