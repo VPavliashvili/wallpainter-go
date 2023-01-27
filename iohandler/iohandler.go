@@ -6,9 +6,9 @@ import (
 )
 
 type IO interface {
-    Exist(file string) bool
-    IsPicture(file string) bool
-    SetWallpaper(file string) error
+	//Exist(file string) bool
+	//IsPicture(file string) bool
+	SetWallpaper(file string, scalign string) error
 }
 
 var extensions = []string{
@@ -17,11 +17,9 @@ var extensions = []string{
 	".jpeg",
 }
 
-func IsPicture(file string) bool {
-    return isPicture(filepath.Ext(file))
-}
+func isPicture(file string) bool {
+	extension := filepath.Ext(file)
 
-func isPicture(extension string) bool {
 	for _, ext := range extensions {
 		if ext == extension {
 			return true

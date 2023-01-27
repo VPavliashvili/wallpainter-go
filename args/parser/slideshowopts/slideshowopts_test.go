@@ -396,6 +396,12 @@ func TestWhenOnlyOneArgButError(t *testing.T) {
 				Path: "not a folder path",
 			},
 		},
+        {
+            opts: []string{"/path/", "t", "-5s"},
+            err: domain.InvalidOptionsError{
+            	OptArgs:      []string{"/path/", "t", "-5s"},
+            },
+        },
 	}
 
 	parser := slideshowopts.Create()

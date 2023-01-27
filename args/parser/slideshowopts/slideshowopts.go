@@ -126,6 +126,12 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 		}
 	}
 
+	if len(options) != 1 {
+		return nil, domain.InvalidOptionsError{
+			OptArgs: options,
+		}
+	}
+
 	res = append(res, opts.Opt{
 		Name:  data.FolderPathOptName,
 		Value: firstOpt,

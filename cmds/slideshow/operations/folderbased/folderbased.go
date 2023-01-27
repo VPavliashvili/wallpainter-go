@@ -1,10 +1,12 @@
 package folderbased
 
 import (
+	"os"
 	"time"
 
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/sharedbehaviour"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
@@ -22,12 +24,19 @@ type pathargument struct {
 }
 
 func (p pathargument) Execute() error {
-	//mychan := make(chan bool)
 
-	//go func() {
-	//dur := time.Duration(p.time)
-	//time.Sleep(p.time * time.Second)
-	//}()
+	if info, err := os.Stat(p.folderpath); os.IsNotExist(err) || !info.IsDir() {
+		return domain.InvalidPathError{Path: p.folderpath}
+	}
+
+	//fmt.Printf("execution of folderbased started\n")
+
+	//for i := time.Second; i <= p.time; i += time.Second {
+	//time.Sleep(time.Second)
+	//fmt.Printf("%v has passed\n", i)
+	//}
+
+	//fmt.Printf("execution of folderbased ended\n")
 
 	return nil
 }

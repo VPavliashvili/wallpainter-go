@@ -1,30 +1,24 @@
 package setwallpaper
 
 import (
-	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+	"github.com/VPavliashvili/wallpainter-go/iohandler"
 )
 
 func Create() cmds.Command {
 	return &setWallpaper{
-		io: io{},
+		io: iohandler.Create(),
 	}
 }
 
 type setWallpaper struct {
-	io      io
+	io      iohandler.IO
 	imgPath string
 	scaling string
 }
 
 func (s setWallpaper) Execute() error {
-	if !s.io.Exist(s.imgPath) {
-		return domain.InvalidPathError{Path: s.imgPath}
-	} else if !s.io.IsPicture(s.imgPath) {
-		return domain.NotPictureError{File: s.imgPath}
-	}
-
 	err := s.io.SetWallpaper(s.imgPath, s.scaling)
 	if err != nil {
 		return err
@@ -40,12 +34,12 @@ func (setWallpaper) Name() string {
 func (s *setWallpaper) SetArgument(arg cmds.CmdArgument) {
 	for _, opt := range arg.Opts {
 		if opt.Name == "--scaling" {
-            s.scaling = opt.Value
+			s.scaling = opt.Value
 		} else if opt.Name == "" {
-            s.imgPath = opt.Value
-        }
+			s.imgPath = opt.Value
+		}
 	}
-    if s.scaling == "" {
-        s.scaling = "scale"
-    }
+	if s.scaling == "" {
+		s.scaling = "scale"
+	}
 }
