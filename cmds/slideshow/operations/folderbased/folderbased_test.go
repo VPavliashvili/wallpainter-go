@@ -13,6 +13,12 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
+type stubLogic struct{}
+
+func (sl stubLogic) set() error {
+	return nil
+}
+
 func TestSetArgumentWhenFolderPath(t *testing.T) {
 	cases := []struct {
 		arg  cmds.CmdArgument
@@ -32,6 +38,7 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				folderpath:  "/path/",
 				time:        data.TimeoptDefaultVal,
 				isRecursive: data.RecursiveDefaultVal,
+                setterLogic: stubLogic{},
 			},
 		},
 		{
@@ -52,6 +59,7 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				time:        time.Minute * 20,
 				isRecursive: data.RecursiveDefaultVal,
 				folderpath:  "/path2/",
+                setterLogic: stubLogic{},
 			},
 		},
 		{
@@ -72,12 +80,13 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				folderpath:  "/path/",
 				time:        data.TimeoptDefaultVal,
 				isRecursive: true,
+                setterLogic: stubLogic{},
 			},
 		},
 	}
 
 	for _, item := range cases {
-		got := createArgumentWithFolderPath(item.arg)
+		got := createArgumentWithFolderPath(item.arg, stubLogic{})
 		want := item.want
 
 		if !reflect.DeepEqual(got, want) {
@@ -108,6 +117,7 @@ func TestExecuteWhenWrongPath(t *testing.T) {
 			folderpath:  item.path,
 			time:        data.TimeoptDefaultVal,
 			isRecursive: data.RecursiveDefaultVal,
+			setterLogic: stubLogic{},
 		}
 
 		got := operation.Execute()

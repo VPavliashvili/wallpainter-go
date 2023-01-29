@@ -17,26 +17,26 @@ import (
 )
 
 func Create(arg cmds.CmdArgument) models.Operation {
-	return createArgumentWithFolderPath(arg)
+	return createArgumentWithFolderPath(arg, logic{
+		path:        getFolderPath(arg.Opts),
+		time:        sharedbehaviour.GetTimeOpt(arg.Opts),
+		isRecursive: getRecursiveOpt(arg.Opts),
+	})
 }
 
-type pathargument struct {
-	folderpath  string
+type wallpaperLogic interface {
+	set() error
+}
+
+type logic struct {
+	path        string
 	time        time.Duration
 	isRecursive bool
 }
 
-func (p pathargument) Execute() error {
-
-	if info, err := os.Stat(p.folderpath); os.IsNotExist(err) || !info.IsDir() {
-		return domain.InvalidPathError{Path: p.folderpath}
-	}
-
-	fmt.Printf("execution of folderbased started\n")
-
-
+func (l logic) set() error {
 	wallpeperSetter := iohandler.GetWallpaperSetter()
-	pictures, err := iohandler.GetPictures(p.folderpath, p.isRecursive)
+	pictures, err := iohandler.GetPictures(l.path, l.isRecursive)
 	source := rand.NewSource(time.Now().Unix())
 	random := rand.New(source)
 
@@ -52,21 +52,50 @@ func (p pathargument) Execute() error {
 		return err
 	}
 
-    for i := time.Second; i <= p.time; i += time.Second {
-        time.Sleep(time.Second)
-        fmt.Printf("%v has passed\n", i)
-    }
+	for i := time.Second; i <= l.time; i += time.Second {
+		time.Sleep(time.Second)
+		fmt.Printf("%v has passed\n", i)
+	}
+
+	return nil
+}
+
+type pathargument struct {
+	folderpath  string
+	time        time.Duration
+	isRecursive bool
+	setterLogic wallpaperLogic
+}
+
+func (p pathargument) Execute() error {
+
+	if info, err := os.Stat(p.folderpath); os.IsNotExist(err) || !info.IsDir() {
+		return domain.InvalidPathError{Path: p.folderpath}
+	}
+
+	fmt.Printf("execution of folderbased started\n")
+
+	err := p.setterLogic.set()
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("execution of folderbased ended\n")
 
-	return p.Execute()
+	switch p.setterLogic.(type) {
+	case logic:
+		return p.Execute()
+	default:
+		return nil
+	}
 }
 
-func createArgumentWithFolderPath(arg cmds.CmdArgument) pathargument {
+func createArgumentWithFolderPath(arg cmds.CmdArgument, logic wallpaperLogic) pathargument {
 	res := pathargument{}
 	res.time = sharedbehaviour.GetTimeOpt(arg.Opts)
 	res.isRecursive = getRecursiveOpt(arg.Opts)
 	res.folderpath = getFolderPath(arg.Opts)
+	res.setterLogic = logic
 
 	return res
 }
