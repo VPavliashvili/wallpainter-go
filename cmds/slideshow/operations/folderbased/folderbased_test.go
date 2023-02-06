@@ -19,6 +19,15 @@ func (sl stubLogic) set() error {
 	return nil
 }
 
+func (sl stubLogic) pathNotExist(path string) bool {
+	switch path {
+	case "correctpath":
+		return false
+	default:
+		return true
+	}
+}
+
 func TestSetArgumentWhenFolderPath(t *testing.T) {
 	cases := []struct {
 		arg  cmds.CmdArgument
@@ -38,7 +47,7 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				folderpath:  "/path/",
 				time:        data.TimeoptDefaultVal,
 				isRecursive: data.RecursiveDefaultVal,
-                setterLogic: stubLogic{},
+				setterLogic: stubLogic{},
 			},
 		},
 		{
@@ -59,7 +68,7 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				time:        time.Minute * 20,
 				isRecursive: data.RecursiveDefaultVal,
 				folderpath:  "/path2/",
-                setterLogic: stubLogic{},
+				setterLogic: stubLogic{},
 			},
 		},
 		{
@@ -80,7 +89,7 @@ func TestSetArgumentWhenFolderPath(t *testing.T) {
 				folderpath:  "/path/",
 				time:        data.TimeoptDefaultVal,
 				isRecursive: true,
-                setterLogic: stubLogic{},
+				setterLogic: stubLogic{},
 			},
 		},
 	}
@@ -107,7 +116,7 @@ func TestExecuteWhenWrongPath(t *testing.T) {
 			},
 		},
 		{
-			path: "/home/stranger/Pictures",
+			path: "correctpath",
 			want: nil,
 		},
 	}

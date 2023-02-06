@@ -2,7 +2,6 @@ package folderbased
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"time"
 
@@ -16,6 +15,8 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+var lastSetPicture string
+
 func Create(arg cmds.CmdArgument) models.Operation {
 	return createArgumentWithFolderPath(arg, logic{
 		path:        getFolderPath(arg.Opts),
@@ -26,6 +27,7 @@ func Create(arg cmds.CmdArgument) models.Operation {
 
 type wallpaperLogic interface {
 	set() error
+	pathNotExist(string) bool
 }
 
 type logic struct {
@@ -34,20 +36,23 @@ type logic struct {
 	isRecursive bool
 }
 
+func (l logic) pathNotExist(path string) bool {
+	info, err := os.Stat(path)
+	return os.IsNotExist(err) || !info.IsDir()
+
+}
+
 func (l logic) set() error {
-	wallpeperSetter := iohandler.GetWallpaperSetter()
 	pictures, err := iohandler.GetPictures(l.path, l.isRecursive)
-	source := rand.NewSource(time.Now().Unix())
-	random := rand.New(source)
 
 	if err != nil {
 		return err
 	}
 
-	index := random.Intn(len(pictures))
-	pic := pictures[index]
+    lastSetPicture = sharedbehaviour.TakeRandomElement(pictures, lastSetPicture)
+    wallpeperSetter := iohandler.GetWallpaperSetter()
 
-	err = wallpeperSetter.SetWallpaper(pic, data.ImageDefaultScaling)
+	err = wallpeperSetter.SetWallpaper(lastSetPicture, data.ImageDefaultScaling)
 	if err != nil {
 		return err
 	}
@@ -69,7 +74,7 @@ type pathargument struct {
 
 func (p pathargument) Execute() error {
 
-	if info, err := os.Stat(p.folderpath); os.IsNotExist(err) || !info.IsDir() {
+	if p.setterLogic.pathNotExist(p.folderpath) {
 		return domain.InvalidPathError{Path: p.folderpath}
 	}
 

@@ -1,6 +1,7 @@
 package sharedbehaviour
 
 import (
+	"math/rand"
 	"time"
 
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
@@ -25,4 +26,26 @@ func GetTimeOpt(options []opts.Opt) time.Duration {
 		return data.TimeoptDefaultVal
 	}
 
+}
+
+// this is for pictures folder
+func TakeRandomElement(elemets []string, prev string) string {
+    arr := []string{}
+
+    if prev == "" {
+        arr = elemets
+    } else {
+        for _, item := range elemets {
+            if prev != item {
+                arr = append(arr, item)
+            }
+        }
+    }
+
+	source := rand.NewSource(time.Now().Unix())
+	random := rand.New(source)
+
+	index := random.Intn(len(arr))
+	pic := arr[index]
+	return pic
 }
