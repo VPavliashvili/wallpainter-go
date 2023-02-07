@@ -26,8 +26,7 @@ func Create(arg cmds.CmdArgument) models.Operation {
 }
 
 type wallpaperLogic interface {
-	set() error
-	pathNotExist(string) bool
+	run() error
 }
 
 type logic struct {
@@ -36,30 +35,29 @@ type logic struct {
 	isRecursive bool
 }
 
-func (l logic) pathNotExist(path string) bool {
+func pathNotExist(path string) bool {
 	info, err := os.Stat(path)
 	return os.IsNotExist(err) || !info.IsDir()
 
 }
 
-func (l logic) set() error {
+func (l logic) run() error {
+    if pathNotExist(l.path) {
+        return domain.InvalidPathError{Path: l.path}
+    }
+
 	pictures, err := iohandler.GetPictures(l.path, l.isRecursive)
 
 	if err != nil {
 		return err
 	}
 
-    lastSetPicture = sharedbehaviour.TakeRandomElement(pictures, lastSetPicture)
-    wallpeperSetter := iohandler.GetWallpaperSetter()
+	lastSetPicture = sharedbehaviour.TakeRandomElement(pictures, lastSetPicture)
+	wallpeperSetter := iohandler.GetWallpaperSetter()
 
 	err = wallpeperSetter.SetWallpaper(lastSetPicture, data.ImageDefaultScaling)
 	if err != nil {
 		return err
-	}
-
-	for i := time.Second; i <= l.time; i += time.Second {
-		time.Sleep(time.Second)
-		fmt.Printf("%v has passed\n", i)
 	}
 
 	return nil
@@ -73,14 +71,9 @@ type pathargument struct {
 }
 
 func (p pathargument) Execute() error {
-
-	if p.setterLogic.pathNotExist(p.folderpath) {
-		return domain.InvalidPathError{Path: p.folderpath}
-	}
-
 	fmt.Printf("execution of folderbased started\n")
 
-	err := p.setterLogic.set()
+	err := p.setterLogic.run()
 	if err != nil {
 		return err
 	}

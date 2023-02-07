@@ -13,19 +13,15 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
 
-type stubLogic struct{}
-
-func (sl stubLogic) set() error {
-	return nil
+type stubLogic struct {
+	mockpath string
 }
 
-func (sl stubLogic) pathNotExist(path string) bool {
-	switch path {
-	case "correctpath":
-		return false
-	default:
-		return true
+func (sl stubLogic) run() error {
+	if sl.mockpath != "correctpath" {
+		return domain.InvalidPathError{Path: sl.mockpath}
 	}
+	return nil
 }
 
 func TestSetArgumentWhenFolderPath(t *testing.T) {
@@ -126,7 +122,7 @@ func TestExecuteWhenWrongPath(t *testing.T) {
 			folderpath:  item.path,
 			time:        data.TimeoptDefaultVal,
 			isRecursive: data.RecursiveDefaultVal,
-			setterLogic: stubLogic{},
+			setterLogic: stubLogic{mockpath: item.path},
 		}
 
 		got := operation.Execute()
