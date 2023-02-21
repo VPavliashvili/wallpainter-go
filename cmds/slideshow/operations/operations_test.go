@@ -9,6 +9,7 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/folderbased"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/helpbased"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/imagesbased"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/listimages"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
@@ -52,6 +53,17 @@ var inputHelpBased = cmds.CmdArgument{
 }
 var outputHelpBased = helpbased.Create(inputHelpBased)
 
+var inputListImages = cmds.CmdArgument{
+	Flag: flags.RunSlideShow,
+	Opts: []opts.Opt{
+        {
+        	Name:  data.ListImagesOpt,
+        	Value: "",
+        },
+    },
+}
+var outputListImages = listimages.Create(inputHelpBased)
+
 func TestCreate(t *testing.T) {
 	cases := []struct {
 		input cmds.CmdArgument
@@ -68,6 +80,9 @@ func TestCreate(t *testing.T) {
         {
         	input: inputHelpBased,
         	want:  outputHelpBased,
+        },{
+        	input: inputListImages,
+        	want:  outputListImages,
         },
 	}
 

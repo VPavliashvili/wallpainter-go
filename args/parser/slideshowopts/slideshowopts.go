@@ -22,18 +22,18 @@ func (p parser) Parse(options []string) ([]opts.Opt, error) {
 		}
 	}
 
-	if options[0] == data.HelpOpt {
+	if options[0] == data.HelpOpt || options[0] == data.ListImagesOpt {
 		if len(options) > 1 {
 			return nil, domain.InvalidOptionsError{
 				OptArgs: options,
 			}
 		}
 		res = append(res, opts.Opt{
-			Name:  data.HelpOpt,
+			Name:  options[0],
 			Value: "",
 		})
 		return res, nil
-	}
+	} 
 
 	foundTimeOpt := false
 	var timeopt opts.Opt

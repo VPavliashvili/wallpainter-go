@@ -38,6 +38,7 @@ func (h helpargument) Execute() error {
 		FehValues         string
 		FehMax            string
 		FehCenter         string
+		ListImagesOpt     string
 	}{
 		Flag:              data.Flag,
 		HelpOpt:           data.HelpOpt,
@@ -51,6 +52,7 @@ func (h helpargument) Execute() error {
 		FehValues:         feh.GetOptionAsString(),
 		FehMax:            feh.Max,
 		FehCenter:         feh.Center,
+		ListImagesOpt:     data.ListImagesOpt,
 	}
 
 	err = tmpl.Execute(os.Stdout, data)

@@ -14,6 +14,7 @@ const Recursiveopt = "-r"
 const ImagesOpt = "--images"
 const TimeOpt = "-t"
 const HelpOpt = "-h"
+const ListImagesOpt = "--list-images"
 
 const FolderPathOptName = "folderpath"
 
