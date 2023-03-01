@@ -25,14 +25,14 @@ func (err NonExistentCommandError) Is(target error) bool {
 }
 
 type InvalidOptionsError struct {
-	OptArgs []string
-    OverridenMsg string
+	OptArgs      []string
+	OverridenMsg string
 }
 
 func (err InvalidOptionsError) Error() string {
-    if err.OverridenMsg != "" {
-        return err.OverridenMsg
-    }
+	if err.OverridenMsg != "" {
+		return err.OverridenMsg
+	}
 	return fmt.Sprintf("Options -> [%v] are invalid for this command", err.OptArgs)
 }
 
@@ -83,4 +83,17 @@ type NotPictureError struct {
 
 func (i NotPictureError) Error() string {
 	return fmt.Sprintf("File -> %v is not an image", i.File)
+}
+
+type OperationNilError struct{}
+
+func (err OperationNilError) Error() string {
+	return "operation is nil for runslideshow command\nmaybe needs implementation"
+}
+
+type NotRunningError struct{
+    OperationName string
+}
+func (err NotRunningError) Error() string {
+    return fmt.Sprintf("%v is not running", err.OperationName)
 }

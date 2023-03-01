@@ -1,8 +1,9 @@
 package slideshow
 
 import (
-	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations"
+	"github.com/VPavliashvili/wallpainter-go/domain"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 )
@@ -20,6 +21,9 @@ func (r *runslideshow) SetArgument(arg cmds.CmdArgument) {
 }
 
 func (r runslideshow) Execute() error {
+	if r.operation == nil {
+		return domain.OperationNilError{}
+	}
 	return r.operation.Execute()
 }
 func (r runslideshow) Name() string {
