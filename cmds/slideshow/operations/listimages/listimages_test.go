@@ -9,13 +9,23 @@ import (
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 )
 
-type writerStub struct{}
-func (i writerStub) Write(p []byte) (int, error) { return 0, nil }
+type fakeSlideshowInfo struct {
+	isRunnigMock bool
+	pictures     []string
+}
+
+func (io fakeSlideshowInfo) IsRunning() bool {
+	return io.isRunnigMock
+}
+
+func (io fakeSlideshowInfo) GetSlideshowPictures() []string {
+	return io.pictures
+}
 
 func TestWhenSlideshowIsNotRunning(t *testing.T) {
 	want := domain.NotRunningError{OperationName: data.Flag}
 
-	sut := create(&writerStub{})
+	sut := create(&bytes.Buffer{}, fakeSlideshowInfo{isRunnigMock: false})
 	err := sut.Execute()
 
 	if !errors.Is(err, want) {
@@ -23,17 +33,55 @@ func TestWhenSlideshowIsNotRunning(t *testing.T) {
 	}
 }
 
-func TestBufferPrinting(t *testing.T) {
+func TestWhenSlideshowIsRunning(t *testing.T) {
+	cases := []struct {
+		want string
+		info fakeSlideshowInfo
+	}{
+		{
+			want: "",
+			info: fakeSlideshowInfo{
+				isRunnigMock: true,
+				pictures:     []string{},
+			},
+		},
+		{
+			want: "someimage.png",
+			info: fakeSlideshowInfo{
+				isRunnigMock: true,
+				pictures:     []string{"someimage.png"},
+			},
+		},
+		{
+			want: "image1\nimage2",
+			info: fakeSlideshowInfo{
+				isRunnigMock: true,
+				pictures:     []string{"image1\nimage2"},
+			},
+		},
+        {
+        	want: "",
+        	info: fakeSlideshowInfo{
+                isRunnigMock: true,
+                pictures: nil,
+            },
+        },
+	}
 
-	output := bytes.Buffer{}
-	sut := create(&output)
+	for _, item := range cases {
+		output := bytes.Buffer{}
+		sut := create(&output, item.info)
 
-	sut.Execute()
+		err := sut.Execute()
+		if err != nil {
+			t.Errorf("error should have been nil\ngot -> %v", err)
+		}
 
-	got := output.String()
-	want := "test"
-	if got != want {
-		t.Errorf("error in buffer printing\ngot\n%v\nwant\n%v", got, want)
+		got := output.String()
+		want := item.want
+
+		if got != want {
+			t.Errorf("error in Execute\ngot\n%v\nwant\n%v", got, want)
+		}
 	}
 }
-
