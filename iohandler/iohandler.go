@@ -2,6 +2,7 @@ package iohandler
 
 import (
 	"io/fs"
+	"os"
 	"path/filepath"
 )
 
@@ -84,3 +85,9 @@ func GetPictures(directory string, recursive bool) ([]string, error) {
 
 	}
 }
+
+func Exists(file string) bool {
+    _, err := os.Stat(file)
+    return !os.IsNotExist(err)
+}
+

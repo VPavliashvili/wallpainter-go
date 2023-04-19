@@ -2,8 +2,10 @@ package folderbased
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/ipc"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/sharedbehaviour"
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds"
@@ -14,39 +16,34 @@ import (
 )
 
 var lastSetPicture string
-var channel chan string
+var runningPictures []string
 
-func Create(arg cmds.CmdArgument) models.Operation {
-	channel = make(chan string)
-
-	return createArgumentWithFolderPath(arg, logic{
-		path:        getFolderPath(arg.Opts),
-		time:        sharedbehaviour.GetTimeOpt(arg.Opts),
-		isRecursive: getRecursiveOpt(arg.Opts),
-	})
+func Create(arg cmds.CmdArgument) models.ProducerOperation {
+	return createArgumentWithFolderPath(
+		arg,
+        logic{
+            time: sharedbehaviour.GetTimeOpt(arg.Opts),
+        },
+		producingImpl{},
+	)
 }
 
-type wallpaperLogic interface {
-	run() error
+func createArgumentWithFolderPath(arg cmds.CmdArgument, logic wallpaperLogic, producinglogic producingLogic) pathargument {
+    res := pathargument{}
+    res.time = sharedbehaviour.GetTimeOpt(arg.Opts)
+    res.isRecursive = getRecursiveOpt(arg.Opts)
+    res.path = getFolderPath(arg.Opts)
+    res.setterLogic = logic
+    res.producingLogic = producinglogic
+
+    return res
 }
 
-type logic struct {
-	path        string
-	time        time.Duration
-	isRecursive bool
-}
-
-func (l logic) run() error {
-	pictures, err := iohandler.GetPictures(l.path, l.isRecursive)
-
-	if err != nil {
-		return err
-	}
-
+func (l logic) run(pictures []string) error {
 	lastSetPicture = sharedbehaviour.TakeRandomElement(pictures, lastSetPicture)
 	wallpeperSetter := iohandler.GetWallpaperSetter()
 
-	err = wallpeperSetter.SetWallpaper(lastSetPicture, data.ImageDefaultScaling)
+	err := wallpeperSetter.SetWallpaper(lastSetPicture, data.ImageDefaultScaling)
 	if err != nil {
 		return err
 	}
@@ -55,19 +52,21 @@ func (l logic) run() error {
 		time.Sleep(time.Second)
 	}
 
-	return l.run()
-}
-
-type pathargument struct {
-	time        time.Duration
-	isRecursive bool
-	setterLogic wallpaperLogic
+	return l.run(pictures)
 }
 
 func (p pathargument) Execute() error {
 	fmt.Printf("execution of folderbased started\n")
 
-	err := p.setterLogic.run()
+	pictures, err := iohandler.GetPictures(p.path, p.isRecursive)
+	runningPictures = append(runningPictures, pictures...)
+    ipc.Write()
+
+	if err != nil {
+		return err
+	}
+
+	err = p.setterLogic.run(pictures)
 	if err != nil {
 		return err
 	}
@@ -76,13 +75,21 @@ func (p pathargument) Execute() error {
 	return nil
 }
 
-func createArgumentWithFolderPath(arg cmds.CmdArgument, logic wallpaperLogic) pathargument {
-	res := pathargument{}
-	res.time = sharedbehaviour.GetTimeOpt(arg.Opts)
-	res.isRecursive = getRecursiveOpt(arg.Opts)
-	res.setterLogic = logic
+func (p producingImpl) produceRunningPictures() string {
+    var builder strings.Builder
+    for i, item := range runningPictures {
+        trail := ""
+        if i != len(runningPictures)-1 {
+            trail = ", "
+        }
+        s := fmt.Sprintf("%v%v", item, trail)
+        builder.WriteString(s)
+    }
+    return builder.String()
+}
 
-	return res
+func (p pathargument) Produce() string {
+    return p.producingLogic.produceRunningPictures()
 }
 
 func getRecursiveOpt(options []opts.Opt) bool {

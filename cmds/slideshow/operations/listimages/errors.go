@@ -1,6 +1,10 @@
 package listimages
 
-type WriterNilError struct {}
-func (err WriterNilError) Error() string {
-    return "writer is nil"
+import "fmt"
+
+type NotRunningError struct{
+    OperationName string
+}
+func (err NotRunningError) Error() string {
+    return fmt.Sprintf("%v is not running", err.OperationName)
 }

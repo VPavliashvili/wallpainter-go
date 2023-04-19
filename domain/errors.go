@@ -90,10 +90,3 @@ type OperationNilError struct{}
 func (err OperationNilError) Error() string {
 	return "operation is nil for runslideshow command\nmaybe needs implementation"
 }
-
-type NotRunningError struct{
-    OperationName string
-}
-func (err NotRunningError) Error() string {
-    return fmt.Sprintf("%v is not running", err.OperationName)
-}

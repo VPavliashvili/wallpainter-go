@@ -2,7 +2,6 @@ package iohandler
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 
 	"github.com/VPavliashvili/wallpainter-go/domain"
@@ -15,8 +14,7 @@ func GetWallpaperSetter() WallpaperSetter {
 type wallpaperSetter struct{}
 
 func (i wallpaperSetter) exist(file string) bool {
-	_, err := os.Stat(file)
-	return !os.IsNotExist(err)
+    return Exists(file)
 }
 
 func (i wallpaperSetter) SetWallpaper(file string, scaling string) error {

@@ -1,6 +1,7 @@
 package operations
 
 import (
+	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/ipc"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/folderbased"
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/operations/helpbased"
@@ -28,8 +29,12 @@ func Create(arg cmds.CmdArgument) models.Operation {
 	} else if isHelp {
 		return helpbased.Create(arg)
 	} else if isListImages {
-        return listimages.Create(arg)
+        res := listimages.Create(arg)
+        ipc.SetReceiver(res)
+        return res
     } else {
-		return folderbased.Create(arg)
+        res := folderbased.Create(arg)
+        ipc.SetProducer(res)
+        return res
 	}
 }
