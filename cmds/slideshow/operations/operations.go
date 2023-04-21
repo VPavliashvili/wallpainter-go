@@ -28,7 +28,7 @@ func Create(arg cmds.CmdArgument) models.Operation {
 	} else if isHelp {
 		return helpbased.Create(arg)
 	} else if isListImages {
-        return listimages.Create(arg)
+        return listimages.Create(nil)
     } else {
 		return folderbased.Create(arg)
 	}

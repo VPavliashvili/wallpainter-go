@@ -62,7 +62,7 @@ var inputListImages = cmds.CmdArgument{
         },
     },
 }
-var outputListImages = listimages.Create(inputHelpBased)
+var outputListImages = listimages.Create(nil)
 
 func TestCreate(t *testing.T) {
 	cases := []struct {
