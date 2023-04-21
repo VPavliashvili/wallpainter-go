@@ -14,10 +14,8 @@ import (
 )
 
 var lastSetPicture string
-var channel chan string
 
 func Create(arg cmds.CmdArgument) models.Operation {
-	channel = make(chan string)
 
 	return createArgumentWithFolderPath(arg, logic{
 		path:        getFolderPath(arg.Opts),
