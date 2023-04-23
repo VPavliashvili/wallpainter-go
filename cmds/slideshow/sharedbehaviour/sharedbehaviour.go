@@ -1,7 +1,9 @@
 package sharedbehaviour
 
 import (
+	"fmt"
 	"math/rand"
+	"os"
 	"time"
 
 	data "github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
@@ -48,4 +50,14 @@ func TakeRandomElement(elemets []string, prev string) string {
 	index := random.Intn(len(arr))
 	pic := arr[index]
 	return pic
+}
+
+func GetJsonStringFromFile(path string) string {
+    res , err := os.ReadFile(path)
+    if err != nil {
+        msg := fmt.Sprintf("THIS HAPPENS WHEN %v is not created yet, it means %v is run before any other %v operation",
+            data.JsonDataFileLocation, data.ListImagesOpt, data.Flag)
+        panic(msg)
+    }
+    return string(res)
 }

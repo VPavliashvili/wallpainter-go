@@ -8,7 +8,10 @@ import (
 
 	"github.com/VPavliashvili/wallpainter-go/domain/feh"
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
+	"github.com/VPavliashvili/wallpainter-go/iohandler"
 )
+
+var JsonDataFileLocation string = iohandler.GetCurrentExecutableDirectory() + "slideshowData.json"
 
 const Recursiveopt = "-r"
 const ImagesOpt = "--images"

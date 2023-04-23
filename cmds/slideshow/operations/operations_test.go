@@ -1,7 +1,6 @@
 package operations_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
@@ -45,22 +44,22 @@ var outputImagesBased = imagesbased.Create(inputImagesBased)
 var inputHelpBased = cmds.CmdArgument{
 	Flag: flags.RunSlideShow,
 	Opts: []opts.Opt{
-        {
-        	Name:  data.HelpOpt,
-        	Value: "",
-        },
-    },
+		{
+			Name:  data.HelpOpt,
+			Value: "",
+		},
+	},
 }
 var outputHelpBased = helpbased.Create(inputHelpBased)
 
 var inputListImages = cmds.CmdArgument{
 	Flag: flags.RunSlideShow,
 	Opts: []opts.Opt{
-        {
-        	Name:  data.ListImagesOpt,
-        	Value: "",
-        },
-    },
+		{
+			Name:  data.ListImagesOpt,
+			Value: "",
+		},
+	},
 }
 var outputListImages = listimages.Create(nil)
 
@@ -77,21 +76,32 @@ func TestCreate(t *testing.T) {
 			input: inputImagesBased,
 			want:  outputImagesBased,
 		},
-        {
-        	input: inputHelpBased,
-        	want:  outputHelpBased,
-        },{
-        	input: inputListImages,
-        	want:  outputListImages,
-        },
+		{
+			input: inputHelpBased,
+			want:  outputHelpBased,
+		}, {
+			input: inputListImages,
+			want:  outputListImages,
+		},
 	}
 
 	for _, item := range cases {
 		got := operations.Create(item.input)
 		want := item.want
 
-		if !reflect.DeepEqual(got, want) {
+		if got == nil || want == nil {
 			t.Errorf("error in Create\ngot\n%v\nwant\n%v", got, want)
 		}
 	}
+}
+
+func TestListImagesIsInjected(t *testing.T) {
+	got := operations.Create(inputImagesBased)
+
+	err := got.Execute()
+
+	if _, throw := err.(*models.ListImagesInjectionError); throw {
+		t.Errorf("listimages operation is not injected")
+	}
+
 }

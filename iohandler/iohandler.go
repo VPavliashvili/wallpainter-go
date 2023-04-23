@@ -1,7 +1,9 @@
 package iohandler
 
 import (
+	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 )
 
@@ -83,4 +85,11 @@ func GetPictures(directory string, recursive bool) ([]string, error) {
 		return handleNonRecursively(directory)
 
 	}
+}
+
+func GetCurrentExecutableDirectory() string {
+    fullpath , _ := os.Executable()
+    path := fmt.Sprintf("%v/", filepath.Dir(fullpath))
+
+    return path
 }

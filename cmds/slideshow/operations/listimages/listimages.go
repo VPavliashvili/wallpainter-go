@@ -9,50 +9,50 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/cmds/data/slideshow"
 )
 
-func Create(handler models.StoredJsonDataHandler) models.Operation {
+func Create(handler models.StoredJsonDataReader) models.Operation {
 	return operation{
-		dataHandler: handler,
+		dataReader: handler,
 	}
 }
 
 type operation struct {
-	dataHandler models.StoredJsonDataHandler
+	dataReader models.StoredJsonDataReader
 }
 
 func (o operation) Execute() error {
 
-    data, err := readDataFromJsonHandler(o)
+	data, err := getdataFromJsonReader(o)
 
-    if err != nil {
-        return err
-    }
+	if err != nil {
+		return err
+	}
 
-    sb := strings.Builder{}
-    line := fmt.Sprintf("%v run\n there are %v pictures loaded into slideshow\n", slideshow.ListImagesOpt, len(data.CyclingPictures))
-    sb.WriteString(line)
-    for i, pic := range data.CyclingPictures {
-        sb.WriteString(strconv.Itoa(i) + ": " + pic)
-    }
+	sb := strings.Builder{}
+	line := fmt.Sprintf("%v run\n there are %v pictures loaded into slideshow\n", slideshow.ListImagesOpt, len(data.SlideshowPictures))
+	sb.WriteString(line)
+	for i, pic := range data.SlideshowPictures {
+		sb.WriteString(strconv.Itoa(i) + ": " + pic)
+	}
 
 	return nil
 }
 
-func readDataFromJsonHandler(o operation) (models.SlideshowDataModel, error) {
+func getdataFromJsonReader(o operation) (models.SlideshowDataModel, error) {
 	data := models.SlideshowDataModel{}
 
-	if o.dataHandler == nil {
-		return data, models.ListImagesError{Msg: "json handler is nil"}
+	if o.dataReader == nil {
+		return data, models.ListImagesInjectionError{}
 	}
 
-	data, err := o.dataHandler.ReadData()
+	data, err := o.dataReader.ReadData()
 
 	if err != nil {
 		return data, models.ListImagesError{Msg: "error when reading from handler"}
 	}
 
-    if !data.IsRunning {
-        return data, models.ListImagesError{Msg: "slideshow is not running"}
-    }
+	if !data.IsRunning {
+		return data, models.ListImagesError{Msg: "slideshow is not running"}
+	}
 
-	return data, nil 
+	return data, nil
 }

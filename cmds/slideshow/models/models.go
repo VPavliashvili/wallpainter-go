@@ -4,12 +4,11 @@ type Operation interface {
 	Execute() error
 }
 
-type StoredJsonDataHandler interface {
-    WriteData() error
+type StoredJsonDataReader interface {
     ReadData() (SlideshowDataModel, error)
 }
 
 type SlideshowDataModel struct {
     IsRunning bool
-    CyclingPictures []string
+    SlideshowPictures []string
 }
