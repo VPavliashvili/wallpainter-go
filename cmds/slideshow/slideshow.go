@@ -12,7 +12,9 @@ import (
 )
 
 func Create() cmds.Command {
-	return &runslideshow{}
+	return &runslideshow{
+        err: errors.New("this is just for unit test"),
+    }
 }
 
 type runslideshow struct {
@@ -28,9 +30,6 @@ func (r *runslideshow) SetArgument(arg cmds.CmdArgument) {
 }
 
 func (r runslideshow) Execute() error {
-	if r.operation == nil {
-		return errors.New("slideshow command encountered error")
-	}
     if r.err != nil {
         return r.err
     }

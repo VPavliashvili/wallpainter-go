@@ -8,7 +8,6 @@ import (
 
 func TestShouldReturnErrorWhenExecutesNullCommand(t *testing.T) {
     sut := slideshow.Create()
-
     err := sut.Execute()
 
     if err == nil {
