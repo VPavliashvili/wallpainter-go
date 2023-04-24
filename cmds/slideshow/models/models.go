@@ -12,3 +12,7 @@ type SlideshowDataModel struct {
     IsRunning bool
     SlideshowPictures []string
 }
+
+type JsonReaderFactory interface{
+    GetReader() (StoredJsonDataReader, error)
+}

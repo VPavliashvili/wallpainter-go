@@ -1,6 +1,7 @@
 package operations_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/VPavliashvili/wallpainter-go/cmds/slideshow/models"
@@ -14,6 +15,12 @@ import (
 	"github.com/VPavliashvili/wallpainter-go/domain/flags"
 	"github.com/VPavliashvili/wallpainter-go/domain/opts"
 )
+
+type mockJsonReaderFactory struct{}
+
+func (m mockJsonReaderFactory) GetReader() (models.StoredJsonDataReader, error) {
+	return nil, nil
+}
 
 var inputFolderBased = cmds.CmdArgument{
 	Flag: flags.RunSlideShow,
@@ -85,18 +92,20 @@ func TestCreate(t *testing.T) {
 		},
 	}
 
+	mockReaderFactory := mockJsonReaderFactory{}
 	for _, item := range cases {
-		got := operations.Create(item.input)
+		got, _ := operations.Create(item.input, mockReaderFactory)
 		want := item.want
 
-		if got == nil || want == nil {
+		if !reflect.DeepEqual(got, want) {
 			t.Errorf("error in Create\ngot\n%v\nwant\n%v", got, want)
 		}
 	}
 }
 
 func TestListImagesIsInjected(t *testing.T) {
-	got := operations.Create(inputImagesBased)
+	mockReaderFactory := mockJsonReaderFactory{}
+	got, _ := operations.Create(inputImagesBased, mockReaderFactory)
 
 	err := got.Execute()
 
